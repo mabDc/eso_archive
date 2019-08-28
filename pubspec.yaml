@@ -23,7 +23,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+
+  # following adds to eso
+  path_provider: ^1.2.0
+  http: ^0.12.0+2
+  chewie: ^0.9.7
   flutter_liquidcore: ^0.6.0+1
+  # flutter_liquidcore: ^0.6.0+1
+  # webview_flutter: ^0.3.13
+  # html: ^0.14.0+2
 
 dev_dependencies:
   flutter_test:

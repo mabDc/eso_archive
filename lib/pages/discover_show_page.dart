@@ -9,6 +9,7 @@ import '../ui/show_error.dart';
 import '../ui/custom_list_tile.dart';
 import '../global/global.dart';
 import 'video_page.dart';
+import 'thumbnail_detail_page.dart';
 
 class DiscoverShowPage extends StatefulWidget {
   DiscoverShowPage({
@@ -121,22 +122,31 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
               buildItem: (_item) {
                 final onTap = () => Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      if (widget.rule.contentType == 'video') {
-                        return VideoPage(
-                          rule: widget.rule,
-                          item: _item,
-                          jsContext: jsContext,
-                        );
+                      switch (widget.rule.contentType) {
+                        case 'video':
+                          return VideoPage(
+                            rule: widget.rule,
+                            item: _item,
+                            jsContext: jsContext,
+                          );
+                          break;
+                        case 'thumbnail':
+                          return ThumbnailDetailPage(
+                            rule: widget.rule,
+                            item: _item,
+                            jsContext: jsContext,
+                          );
+                        default:
+                          return Scaffold(
+                            appBar: AppBar(
+                              title: Text('contentType error'),
+                            ),
+                            body: ShowError(
+                              errorMsg:
+                                  'undefined contentType of ${widget.rule.contentType} in rule ${widget.rule.name}',
+                            ),
+                          );
                       }
-                      return Scaffold(
-                        appBar: AppBar(
-                          title: Text('contentType error'),
-                        ),
-                        body: ShowError(
-                          errorMsg:
-                              'undefined contentType of ${widget.rule.contentType} in rule ${widget.rule.name}',
-                        ),
-                      );
                     }));
 
                 if (_item["type"] == 'customListTile') {

@@ -22,12 +22,12 @@ class ShowError extends StatelessWidget {
               size: 48,
             ),
             Text(
-              'something wrong\ndon\'t worry, press back and return to last page',
+              'something wrong\ndon\'t worry, you can press back \n and return to last page',
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Theme.of(context).primaryTextTheme.title.color,
-                  height: 3,
-                  fontSize: 20.0,
+                  height: 2,
+                  fontSize: 22.0,
                   fontStyle: FontStyle.italic),
             ),
             Padding(padding: EdgeInsets.only(bottom: 50.0)),

@@ -92,10 +92,10 @@ class ExampleVideo {
   var roads = [];
   \$('.slider-list').each((index,slider)=>{
     // default use listTile, props show as following
-    // lock;
+    // leading;
     // title;
     // subtitle;
-    // trailing;
+    // lock;
     // you should use chapter as list name
 
     var title = \$(slider).text().trim();

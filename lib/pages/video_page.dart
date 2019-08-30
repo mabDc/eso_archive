@@ -66,9 +66,7 @@ class _VideoPageState extends State<VideoPage>
     dynamic chapterItems =
         await jsContext.evaluateScript(widget.rule.chapterItems);
     chapterBuild(chapterItems);
-    setState(() {
-      
-    });
+    setState(() {});
     return true;
   }
 
@@ -86,45 +84,50 @@ class _VideoPageState extends State<VideoPage>
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: Column(
-            children: <Widget>[
-              url == null
-                  ? Container(
-                      height: 220,
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
-                    )
-                  : Chewie(
-                      controller: ChewieController(
-                      videoPlayerController: videoPlayerController,
-                      aspectRatio: 16 / 9,
-                      autoPlay: true,
-                    )),
-              Material(
-                color: Theme.of(context).primaryColor,
-                child: TabBar(
-                  controller: tabcontroller,
-                  indicatorColor:
-                      Theme.of(context).primaryTextTheme.title.color,
-                  labelColor: Theme.of(context).primaryTextTheme.title.color,
-                  unselectedLabelColor: Theme.of(context)
-                      .primaryTextTheme
-                      .title
-                      .color
-                      .withOpacity(0.75),
-                  tabs: <Tab>[
-                    Tab(text: '选集'),
-                    Tab(text: '详情'),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: TabBarView(controller: tabcontroller, children: <Widget>[
-                  ListView.builder(itemCount: chapter.length, itemBuilder: (context,index)=>chapter[index],),
-                  ListView.builder(itemCount: info.length, itemBuilder: (context,index)=>info[index],),
-                ]),
-              ),
-            ],
+        children: <Widget>[
+          url == null
+              ? Container(
+                  height: 220,
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                )
+              : Chewie(
+                  controller: ChewieController(
+                  videoPlayerController: videoPlayerController,
+                  aspectRatio: 16 / 9,
+                  autoPlay: true,
+                )),
+          Material(
+            color: Theme.of(context).primaryColor,
+            child: TabBar(
+              controller: tabcontroller,
+              indicatorColor: Theme.of(context).primaryTextTheme.title.color,
+              labelColor: Theme.of(context).primaryTextTheme.title.color,
+              unselectedLabelColor: Theme.of(context)
+                  .primaryTextTheme
+                  .title
+                  .color
+                  .withOpacity(0.75),
+              tabs: <Tab>[
+                Tab(text: 'list'),
+                Tab(text: 'desc'),
+              ],
+            ),
           ),
-      );
+          Expanded(
+            child: TabBarView(controller: tabcontroller, children: <Widget>[
+              ListView.builder(
+                itemCount: chapter.length,
+                itemBuilder: (context, index) => chapter[index],
+              ),
+              ListView.builder(
+                itemCount: info.length,
+                itemBuilder: (context, index) => info[index],
+              ),
+            ]),
+          ),
+        ],
+      ),
+    );
   }
 
   void detailBuild(dynamic detailItems) {
@@ -178,22 +181,34 @@ class _VideoPageState extends State<VideoPage>
     }
     roads.forEach((road) {
       chapter.add(ListTile(
+        leading: road['leading'] == null
+            ? null
+            : Text(
+                road['leading']?.toString() ?? '',
+                textAlign: TextAlign.center,
+              ),
         title: PrimaryColorText(road['title']?.toString() ?? ''),
         subtitle: PrimaryColorText(road['subtitle']?.toString() ?? ''),
         trailing: PrimaryColorText(road['trailing']?.toString() ?? ''),
       ));
-      (road['chapter'] as List).forEach((ch) {
+      (road['chapter'] as List).forEach((item) {
         chapter.add(Card(
           child: ListTile(
-            title: Text(ch['title']?.toString() ?? ''),
-            subtitle: Text(ch['subtitle']?.toString() ?? ''),
-            trailing: Text(ch['trailing']?.toString() ?? ''),
+            leading: item['leading'] == null
+                ? null
+                : Text(
+                    item['leading']?.toString() ?? '',
+                    textAlign: TextAlign.center,
+                  ),
+            title: Text(item['title']?.toString() ?? ''),
+            subtitle: Text(item['subtitle']?.toString() ?? ''),
+            trailing: Text(item['trailing']?.toString() ?? ''),
             onTap: () async {
-              await widget.jsContext.setProperty('item', ch);
+              await widget.jsContext.setProperty('item', item);
               dynamic contentUrl =
                   await widget.jsContext.evaluateScript(widget.rule.contentUrl);
               setState(() {
-                title = '${ch['title']}';
+                title = '${item['title']}';
                 url = contentUrl;
               });
             },

@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import '../utils/rule.dart';
 import 'source_edit_page.dart';
 import '../rule/example_video.dart';
+import '../rule/thumbnail_example.dart';
 import 'discover_show_page.dart';
 
 class DiscoverPage extends StatefulWidget {
@@ -14,7 +13,10 @@ class DiscoverPage extends StatefulWidget {
 class _DiscoverPageState extends State<DiscoverPage> {
   @override
   Widget build(BuildContext context) {
-    List<dynamic> rules = <Rule>[Rule.safeFromJson(ExampleVideo().rule)];
+    List<dynamic> rules = <Rule>[
+      Rule.safeFromJson(ExampleVideo().rule),
+      Rule.safeFromJson(ThumbnailExample().rule),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text('discover'),

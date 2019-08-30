@@ -55,13 +55,17 @@ class _ArticleDescription extends StatelessWidget {
             children: <Widget>[
               Text(
                 '$author',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 12.0,
                   color: Colors.black87,
                 ),
               ),
               Text(
-                '$publishDate · $readDuration ★',
+                '$publishDate - $readDuration',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 12.0,
                   color: Colors.black54,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../utils/rule.dart';
 import 'source_edit_page.dart';
@@ -12,19 +14,16 @@ class DiscoverPage extends StatefulWidget {
 class _DiscoverPageState extends State<DiscoverPage> {
   @override
   Widget build(BuildContext context) {
-    List<dynamic> rules = <Rule>[
-      Rule.safeFromJson(ExampleVideo().rule)
-    ];
-
+    List<dynamic> rules = <Rule>[Rule.safeFromJson(ExampleVideo().rule)];
     return Scaffold(
       appBar: AppBar(
         title: Text('discover'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () => print('search'),
-          ),
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: Icon(Icons.search),
+        //     onPressed: () => print('search'),
+        //   ),
+        // ],
       ),
       body: ListView.builder(
         itemCount: rules.length + 1,
@@ -59,7 +58,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                       builder: (context) => RuleEditPage(rule))),
                 ),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => DiscoverShowPage(rule))),
+                    builder: (context) => DiscoverShowPage(
+                          rule: rule,
+                        ))),
               ),
             );
           }

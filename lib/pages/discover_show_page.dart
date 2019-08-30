@@ -1,93 +1,175 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_liquidcore/liquidcore.dart';
-import '../utils/rule.dart';
-import '../global/global.dart';
 import 'package:http/http.dart' as http;
+
+import '../utils/rule.dart';
+import '../utils/custom_item.dart';
+import '../ui/show_items.dart';
+import '../ui/show_error.dart';
 import '../ui/custom_list_tile.dart';
-import '../utils/search_custom_item.dart';
+import '../global/global.dart';
+import 'video_page.dart';
 
 class DiscoverShowPage extends StatefulWidget {
-  DiscoverShowPage(
-    this.rule, {
+  DiscoverShowPage({
+    @required this.rule,
+    this.title,
+    this.keyword,
     Key key,
   }) : super(key: key);
 
   final Rule rule;
+  final String title;
+  final String keyword;
 
   @override
   _DiscoverShowPageState createState() => _DiscoverShowPageState();
 }
 
 class _DiscoverShowPageState extends State<DiscoverShowPage> {
-  int page = 1;
-  List<dynamic> items = <dynamic>[];
   JSContext jsContext;
+  bool showSearchBar = false;
 
   @override
   void initState() {
-    jsContext = JSContext();
     super.initState();
+    jsContext = JSContext();
   }
 
-  Future<bool> discover() async {
-    Rule rule = widget.rule;
-    if (rule.enCheerio && page == 1) {
+  Future<bool> initJSContext() async {
+    if (widget.rule.enCheerio) {
       String script =
           await DefaultAssetBundle.of(context).loadString(Global().cheerioFile);
       await jsContext.evaluateScript(script);
     }
-    await jsContext.setProperty('host', rule.host);
-    await jsContext.setProperty('page', page);
-    dynamic url = await jsContext.evaluateScript(rule.discoverUrl);
-    final response = await http.get(url?.toString() ?? '');
-    await jsContext.setProperty('body', response.body);
-    final _list = await jsContext.evaluateScript(rule.discoverItems);
-    items.addAll(_list);
-    page++;
-    setState(() {});
+    await jsContext.setProperty('host', widget.rule.host);
+    await jsContext.setProperty('keyword', widget.keyword);
+
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    final rule = widget.rule;
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('rule - ${rule.name}'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () => print('search'),
-            ),
-          ],
-        ),
-        body: FutureBuilder<bool>(
-          future: discover(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
-            return snapshot.hasData && snapshot.data
-                ? ListView.builder(
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      if (items.length - index == 1) {
-                        discover();
-                      }
-                      final item = SearchCustomItem.safeFromJson(items[index]);
-                      return CustomListTile(
-                        thumbnail: Image.network(item.thumbnailUrl),
-                        title: item.title,
-                        subtitle: item.subtitle,
-                        author: item.author,
-                        publishDate: item.publishDate,
-                        readDuration: item.readDuration,
-                      );
+    return Theme(
+      data: showSearchBar
+          ? ThemeData(primaryColor: Colors.white)
+          : Theme.of(context),
+      child: Scaffold(
+        appBar: showSearchBar
+            ? AppBar(
+                title: TextField(
+                  autofocus: true,
+                  onSubmitted: (value) =>
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DiscoverShowPage(
+                                rule: widget.rule,
+                                keyword: value.trim(),
+                                title: 'search ${value.trim()}',
+                              ))),
+                ),
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      setState(() {
+                        showSearchBar = false;
+                      });
                     },
-                  )
-                : Center(child: CircularProgressIndicator());
+                  ),
+                ],
+              )
+            : AppBar(
+                title: Text(widget.title ?? 'discover - ${widget.rule.name}'),
+                actions: widget.keyword == null
+                    ? <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: () {
+                            setState(() {
+                              showSearchBar = true;
+                            });
+                          },
+                        ),
+                      ]
+                    : <Widget>[],
+              ),
+        body: FutureBuilder<bool>(
+          future: initJSContext(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return ShowError(
+                errorMsg: snapshot.error,
+              );
+            }
+            if (!snapshot.hasData || !snapshot.data) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return ShowItems(
+              buildPage: (page) async {
+                await jsContext.setProperty('page', page);
+                dynamic url = await jsContext.evaluateScript(
+                    widget.keyword == null
+                        ? widget.rule.discoverUrl
+                        : widget.rule.searchUrl);
+                await jsContext.setProperty('url', url);
+                final response = await http.get(url?.toString() ?? '');
+                await jsContext.setProperty('body', response.body);
+                return jsContext.evaluateScript(widget.keyword == null
+                    ? widget.rule.discoverItems
+                    : widget.rule.searchItems);
+              },
+              buildItem: (_item) {
+                final onTap = () => Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      if (widget.rule.contentType == 'video') {
+                        return VideoPage(
+                          rule: widget.rule,
+                          item: _item,
+                          jsContext: jsContext,
+                        );
+                      }
+                      return Scaffold(
+                        appBar: AppBar(
+                          title: Text('contentType error'),
+                        ),
+                        body: ShowError(
+                          errorMsg:
+                              'undefined contentType of ${widget.rule.contentType} in rule ${widget.rule.name}',
+                        ),
+                      );
+                    }));
+
+                if (_item["type"] == 'customListTile') {
+                  final item = CustomItem.safeFromJson(_item);
+                  return CustomListTile(
+                      thumbnail: Image.network(item.thumbnailUrl),
+                      title: item.title,
+                      subtitle: item.subtitle,
+                      author: item.author,
+                      publishDate: item.publishDate,
+                      readDuration: item.readDuration,
+                      onTap: onTap);
+                }
+                return Card(
+                  child: ListTile(
+                    leading: Image.network('${_item['thumbnailUrl']}'),
+                    title: Text('${_item['title']}'),
+                    subtitle: Text(
+                      '${_item['subtitle']}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Text('${_item['trailing']}'),
+                    isThreeLine: true,
+                    onTap: onTap,
+                  ),
+                );
+              },
+            );
           },
-        ));
+        ),
+      ),
+    );
   }
 
   @override

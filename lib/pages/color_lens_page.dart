@@ -16,11 +16,11 @@ class _ColorLensPageState extends State<ColorLensPage> {
 
   @override
   void initState() {
+    super.initState();
     Color _customColor = Color(Global().option.customColorValue);
     r = TextEditingController(text: _customColor.red.toString());
     g = TextEditingController(text: _customColor.green.toString());
     b = TextEditingController(text: _customColor.blue.toString());
-    super.initState();
   }
 
   @override

@@ -1,20 +1,23 @@
-class ExampleVideo{
+class ExampleVideo {
   Map<String, dynamic> get rule => {
-        'enable':true,
-        'name': 'example video',
+        'enable': true,
+        'name': 'video example',
         'host': 'http://www.zzzfun.com',
         'contentType': 'video',
         'enCheerio': true,
         'discoverUrl': '''
-// you can use variable
-// `\${host}` and `\${page}`
+// you can use variable as following
+// host as 'http://www.zzzfun.com'
+// page as current page
 `\${host}/vod-type-id-1-page-\${page}.html`''',
         'discoverItems': '''
-// you can use variable
+// you can use variable as following
 // host as 'http://www.zzzfun.com'
-// result as lastest rule executes result
+// page as current page
+// url as lastest urlRule executes result
 // body as response.body
-// because of enCheerio is true, also has `\$=cheerio.load(body)`
+// because of enCheerio is true, 
+// you can use `\$=cheerio.load(body)`
 
 // type customListTile show as following
 // thumbnailUrl;
@@ -26,7 +29,7 @@ class ExampleVideo{
 
 (()=>{
   var \$=cheerio.load(body);
-  var list = [];
+  var items = [];
   \$('.search-result a').each((index,item) => {
     var type = 'customListTile';
     var href = `\${host}\${\$(item).attr('href')}`;
@@ -34,47 +37,51 @@ class ExampleVideo{
     var title = \$('.title-big',item).text();
     var subtitle = \$('.d-descr',item).text().replace(/\\s/g,'');
     var author = \$('.title-sub',item).text().replace(/\\s/g,'');
-    var publishDate = '';
+    var publishDate = 'zzzfun';
     var readDuration = '';
-    list.push({type, href, thumbnailUrl, title, subtitle, author, publishDate, readDuration});
+    items.push({type, href, thumbnailUrl, title, subtitle, author, publishDate, readDuration});
   });
-  return list;
-})();
-/*
-(()=>{
-  var aa=cheerio.load(body);
-  console.log(typeof(aa));
-  console.log(aa);
-  var xx = [];
-  return aa('.search-result a').map((i,x)=>i.toString());
-})();
-*/
-''', 
+  return items;
+})();''',
         'searchUrl': '''
-// you can use variable 
-// `\${host}` `\${keyword}` `\${page}`
+// you can use variable as following
+// host as 'http://www.zzzfun.com'
+// page as current page
+// keyword as search key
 `\${host}/vod-search-page-\${page}-wd-\${keyword}.html`''',
         'searchItems': '''
 // here rule is like discoverItems
 (()=>{
   var \$=cheerio.load(body);
-  return \$('.show-list li').map((index,item) => {
+  var items = [];
+  \$('.show-list li').each((index,item) => {
     var type = 'customListTile';
-    var href = `\${host}\${\$(item).attr('href')}`;
+    var href = `\${host}\${\$('h2 a',item).attr('href')}`;
     var thumbnailUrl = \$('img',item).attr('src');
-    var title = \$('h2',item).text();
+    var title = \$('h2 a',item).text();
     var subtitle = \$('.juqing',item).text();
     var author = \$('dl',item).first().text().replace(/\\s/g,'');
-    var publishDate = '';
+    var publishDate = 'zzzfun';
     var readDuration = '';
-    return {type, href, thumbnailUrl, title, subtitle, author, publishDate, readDuration};
+    items.push({type, href, thumbnailUrl, title, subtitle, author, publishDate, readDuration});
   });
+  return items;
 })();''',
-        'detailUrl': '//result is lastest rule executes result\nresult.href',
+        'detailUrl': '//item is lastest item rule executes result\nitem.href',
         'detailItems': '''
+// because of holding on jscontext
+// you can use any used variables
+// like host page keyword url item and so on
 (()=>{
   var \$=cheerio.load(body);
-  return \$('.count-item').text();
+  var s = [];
+  \$('.count-item').each((index,item) => {
+    s.push(\$(item).text().replace(/\\s/g,''));
+  });
+  var info = \$('.content-row').text().replace(/\\s/g,'');
+  var bieming = \$('.btm-text').text().replace(/\\s/g,'');
+  return [s.join('\\n'),info,bieming];
+
 })();''',
         'enMultiRoads': true,
         'chapterUrl': '',
@@ -82,26 +89,38 @@ class ExampleVideo{
 (()=>{
   var \$=cheerio.load(body);
   var \$episode = \$('.episode');
-  return \$('.slider-list').map((index,item){
-    //default use listTile
-    //var type = listTile;
-    var title = \$(item).text();
+  var roads = [];
+  \$('.slider-list').each((index,slider)=>{
+    // default use listTile, props show as following
+    // lock;
+    // title;
+    // subtitle;
+    // trailing;
+    // you should use chapter as list name
+
+    var title = \$(slider).text().trim();
     var a = \$('a', \$episode[index]);
-    var subtitle = `共 \${\$a.length} 话`;
-    var list = a.map((index,item){
+    var subtitle = `共 \${a.length} 话`;
+    var chapter = [];
+    a.each((index,item)=>{
       var title = \$(item).text();
+      var subtitle = \$(item).attr('href');
       var href = \$(item).attr('href');
-      return {title, href};
+      chapter.push({title, subtitle});
     });
-    return {title, subtitle, list};
+    roads.push({title, subtitle,chapter});
   });
+  return roads;
 })();''',
-        'contentUrl': '''var m = result.href.match(/\\/vod-play-id-(\\d+)-sid-(\\d+)-nid-(\\d+)\\.html/);
-var sid = m[2];
-if(sid='1'){
-  sid='';
-}
-`http://111.230.89.165:8089/zapi/play\${sid}.php?url=\${m[1]}-\${m[3]}`''',
+        'contentUrl': '''
+(()=>{
+  var m = item.subtitle.match(/\\/vod-play-id-(\\d+)-sid-(\\d+)-nid-(\\d+)\\.html/);
+  var sid = m[2];
+  if(sid='1'){
+    sid='';
+  }
+  return `http://111.230.89.165:8089/zapi/play\${sid}.php?url=\${m[1]}-\${m[3]}`;
+})();''',
         'contentItems': '',
       };
 }

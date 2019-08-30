@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'global/global.dart';
 import 'pages/theme_proxy_page.dart';
+import 'ui/show_error.dart';
 
 void main() async {
   await Global().init();
+  ErrorWidget.builder = (FlutterErrorDetails err){
+    String errorMsg = err.toStringShort() + '\n' + err.toString();
+    return ShowError(errorMsg: errorMsg,);
+  };
   runApp(ThemeProxyPage());
   if (Platform.isAndroid) {
     // 以下两行

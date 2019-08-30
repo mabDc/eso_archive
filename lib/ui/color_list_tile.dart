@@ -8,6 +8,7 @@ class ColorListTile extends StatelessWidget {
     this.color,
     this.trailing,
     this.onTap,
+    this.onLongPress,
   }) : super(key: key);
 
   final Widget title;
@@ -15,6 +16,7 @@ class ColorListTile extends StatelessWidget {
   final Color color;
   final Widget trailing;
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class ColorListTile extends StatelessWidget {
       subtitle: subtitle,
       trailing: trailing,
       onTap: onTap,
+      onLongPress: onLongPress,
     );
   }
 }

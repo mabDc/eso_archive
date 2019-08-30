@@ -10,17 +10,10 @@ class Setting {
   bool enFlippingAnimation = false;
   // theme settings
   bool enBrightnessDark = false;
-  int materialColorIndex = 0;
-
-  Setting.deaultOption() {
-    enTabBar = true;
-    enAutoRefresh = false;
-    enFullScreen = true;
-    enVolumeControl = false;
-    enFlippingAnimation = false;
-    enBrightnessDark = false;
-    materialColorIndex = 0;
-  }
+  int colorValue = 0xff009688;
+  int customColorValue = 0xff009688;
+  // other settings
+  //String download path;
 
   Setting.copyFrom(Setting other) {
     if (other.enTabBar != null) {
@@ -41,23 +34,27 @@ class Setting {
     if (other.enBrightnessDark != null) {
       enBrightnessDark = other.enBrightnessDark;
     }
-    if (other.materialColorIndex != null) {
-      materialColorIndex = other.materialColorIndex;
+    if (other.colorValue != null) {
+      colorValue = other.colorValue;
+    }
+    if (other.customColorValue != null) {
+      customColorValue = other.customColorValue;
     }
   }
 
   Setting.safeFromJson(Map<String, dynamic> json) {
-    final defaultOption = Setting.deaultOption();
-    enTabBar = json['enTabBar'] ?? defaultOption.enTabBar;
-    enAutoRefresh = json['enAutoRefresh'] ?? defaultOption.enAutoRefresh;
-    enFullScreen = json['enFullScreen'] ?? defaultOption.enFullScreen;
-    enVolumeControl = json['enVolumeControl'] ?? defaultOption.enVolumeControl;
+    final defaultSetting = Setting();
+    enTabBar = json['enTabBar'] ?? defaultSetting.enTabBar;
+    enAutoRefresh = json['enAutoRefresh'] ?? defaultSetting.enAutoRefresh;
+    enFullScreen = json['enFullScreen'] ?? defaultSetting.enFullScreen;
+    enVolumeControl = json['enVolumeControl'] ?? defaultSetting.enVolumeControl;
     enFlippingAnimation =
-        json['enFlippingAnimation'] ?? defaultOption.enFlippingAnimation;
+        json['enFlippingAnimation'] ?? defaultSetting.enFlippingAnimation;
     enBrightnessDark =
-        json['enBrightnessDark'] ?? defaultOption.enBrightnessDark;
-    materialColorIndex =
-        json['materialColorIndex'] ?? defaultOption.materialColorIndex;
+        json['enBrightnessDark'] ?? defaultSetting.enBrightnessDark;
+    colorValue = json['colorValue'] ?? defaultSetting.colorValue;
+    customColorValue =
+        json['customColorValue'] ?? defaultSetting.customColorValue;
   }
 
   Setting.fromJson(Map<String, dynamic> json)
@@ -67,7 +64,8 @@ class Setting {
         enVolumeControl = json['enVolumeControl'],
         enFlippingAnimation = json['enFlippingAnimation'],
         enBrightnessDark = json['enBrightnessDark'],
-        materialColorIndex = json['materialColorIndex'];
+        colorValue = json['colorValue'],
+        customColorValue = json['customColorValue'];
 
   Map<String, dynamic> toJson() => {
         'enTabBar': enTabBar,
@@ -76,6 +74,7 @@ class Setting {
         'enVolumeControl': enVolumeControl,
         'enFlippingAnimation': enFlippingAnimation,
         'enBrightnessDark': enBrightnessDark,
-        'materialColorIndex': materialColorIndex,
+        'colorValue': colorValue,
+        'customColorValue': customColorValue,
       };
 }

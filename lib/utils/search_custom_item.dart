@@ -15,7 +15,7 @@ class SearchCustomItem {
     this.readDuration,
   });
 
-  SearchCustomItem.safeFromJson(Map<String, dynamic> json)
+  SearchCustomItem.safeFromJson(Map<dynamic, dynamic> json)
       : thumbnailUrl = json['thumbnailUrl']?.toString() ?? '',
         title = json['title']?.toString() ?? '',
         subtitle = json['subtitle']?.toString() ?? '',
@@ -23,7 +23,7 @@ class SearchCustomItem {
         publishDate = json['publishDate']?.toString() ?? '',
         readDuration = json['readDuration']?.toString() ?? '';
 
-  SearchCustomItem.fromJson(Map<String, dynamic> json)
+  SearchCustomItem.fromJson(Map<dynamic, dynamic> json)
       : thumbnailUrl = json['thumbnailUrl'],
         title = json['title'],
         subtitle = json['subtitle'],

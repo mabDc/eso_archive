@@ -16,7 +16,7 @@ class OptionSwitch extends StatelessWidget {
   final Widget subtitle;
   final bool value;
   final VoidCallback onTap;
-  final dynamic onChange;
+  final void Function(bool) onChange;
 
   @override
   Widget build(BuildContext context) {

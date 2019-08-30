@@ -38,7 +38,7 @@ class _AboutPageState extends State<AboutPage> {
               child: Center(
                 child: ListTile(
                   title: Text(
-                    '亦搜',
+                    'ESO',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 120.0,
@@ -81,14 +81,7 @@ class _AboutPageState extends State<AboutPage> {
           ),
           Card(
             child: ListTile(
-              title: Text('check update'),
-              subtitle: Text('click'),
-              onTap: () => print('tap check update'),
-            ),
-          ),
-          Card(
-            child: ListTile(
-              title: Text('source'),
+              title: Text('open source'),
               subtitle: Text('https://github.com/mabDc/lizi'),
               onTap: () => print('tap source'),
             ),
@@ -98,6 +91,13 @@ class _AboutPageState extends State<AboutPage> {
               title: Text('issues'),
               subtitle: Text('https://github.com/mabDc/lizi/issues'),
               onTap: () => print('tap issues'),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: Text('check update'),
+              subtitle: Text('click'),
+              onTap: () => print('tap check update'),
             ),
           ),
         ],

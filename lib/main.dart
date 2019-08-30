@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'global/global.dart';
 import 'pages/theme_proxy_page.dart';
 
-void main() {
-  Global().init();
+void main() async {
+  await Global().init();
   runApp(ThemeProxyPage());
   if (Platform.isAndroid) {
     // 以下两行

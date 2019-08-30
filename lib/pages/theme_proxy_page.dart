@@ -19,12 +19,13 @@ class _ThemeProxyPageState extends State<ThemeProxyPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '亦搜',
+      title: 'eso',
       theme: ThemeData(
           brightness: Global().option.enBrightnessDark
               ? Brightness.dark
               : Brightness.light,
-          primaryColor: Colors.primaries[Global().option.materialColorIndex]),
+          //primaryColor: Colors.primaries[Global().option.materialColorIndex]),
+          primaryColor: Color(Global().option.colorValue)),
       home: NavigationPage(),
     );
   }

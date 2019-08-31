@@ -9,7 +9,7 @@ import 'ui/show_error.dart';
 void main() async {
   await Global().init();
   ErrorWidget.builder = (FlutterErrorDetails err){
-    String errorMsg = err.toStringShort() + '\n' + err.toString();
+    String errorMsg = err.toString() + '\n' + err.toString();
     return ShowError(errorMsg: errorMsg,);
   };
   runApp(ThemeProxyPage());

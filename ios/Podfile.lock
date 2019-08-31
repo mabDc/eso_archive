@@ -1,0 +1,47 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_liquidcore (0.6.0):
+    - Flutter
+    - LiquidCore (~> 0.6)
+  - LiquidCore (0.6.2)
+  - path_provider (0.0.1):
+    - Flutter
+  - screen (0.0.1):
+    - Flutter
+  - video_player (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_liquidcore (from `.symlinks/plugins/flutter_liquidcore/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - screen (from `.symlinks/plugins/screen/ios`)
+  - video_player (from `.symlinks/plugins/video_player/ios`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - LiquidCore
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: ".symlinks/flutter/ios"
+  flutter_liquidcore:
+    :path: ".symlinks/plugins/flutter_liquidcore/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  screen:
+    :path: ".symlinks/plugins/screen/ios"
+  video_player:
+    :path: ".symlinks/plugins/video_player/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  flutter_liquidcore: f8ed82b73504bdab95547719850202defed1e55d
+  LiquidCore: a95bc50ffa8b249a5b5d7a1baa4d57fac4597d23
+  path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
+  screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
+  video_player: 3964090a33353060ed7f58aa6427c7b4b208ec21
+
+PODFILE CHECKSUM: 44343c621236bf906b4fec69a7db15cfcaa6d5c8
+
+COCOAPODS: 1.7.3

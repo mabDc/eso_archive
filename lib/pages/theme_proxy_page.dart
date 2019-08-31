@@ -21,11 +21,11 @@ class _ThemeProxyPageState extends State<ThemeProxyPage> {
     return MaterialApp(
       title: 'eso',
       theme: ThemeData(
-          brightness: Global().option.enBrightnessDark
+          brightness: Global().setting.enBrightnessDark
               ? Brightness.dark
               : Brightness.light,
           //primaryColor: Colors.primaries[Global().option.materialColorIndex]),
-          primaryColor: Color(Global().option.colorValue)),
+          primaryColor: Color(Global().setting.colorValue)),
       home: NavigationPage(),
     );
   }

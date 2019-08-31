@@ -43,13 +43,13 @@ class _NavigationPageState extends State<NavigationPage>
     ];
 
     return Scaffold(
-      body: Global().option.enTabBar
+      body: Global().setting.enTabBar
           ? TabBarView(
               controller: _tabController,
               children: pages,
             )
           : pages[_currentIndex],
-      bottomNavigationBar: Global().option.enTabBar
+      bottomNavigationBar: Global().setting.enTabBar
           ? Material(
               color: Theme.of(context).primaryColor,
               child: TabBar(

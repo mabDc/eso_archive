@@ -10,6 +10,7 @@ import '../ui/custom_list_tile.dart';
 import '../global/global.dart';
 import 'video_page.dart';
 import 'thumbnail_detail_page.dart';
+import '../utils/parser.dart';
 
 class DiscoverShowPage extends StatefulWidget {
   DiscoverShowPage({
@@ -60,13 +61,14 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
             ? AppBar(
                 title: TextField(
                   autofocus: true,
-                  onSubmitted: (value) =>
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DiscoverShowPage(
-                                rule: widget.rule,
-                                keyword: value.trim(),
-                                title: 'search ${value.trim()}',
-                              ))),
+                  onSubmitted: (value) => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => DiscoverShowPage(
+                              rule: widget.rule,
+                              keyword: value.trim(),
+                              title: 'search ${value.trim()}',
+                            )),
+                  ),
                 ),
                 actions: <Widget>[
                   IconButton(
@@ -113,7 +115,7 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
                         ? widget.rule.discoverUrl
                         : widget.rule.searchUrl);
                 await jsContext.setProperty('url', url);
-                final response = await http.get(url?.toString() ?? '');
+                final response = await Parser().urlToResponse(url);
                 await jsContext.setProperty('body', response.body);
                 return jsContext.evaluateScript(widget.keyword == null
                     ? widget.rule.discoverItems

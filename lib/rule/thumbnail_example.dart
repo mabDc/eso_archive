@@ -1,5 +1,5 @@
 class ThumbnailExample {
-  Map<String, dynamic> get rule => {
+  Map<dynamic, dynamic> get rule => {
         'enable': true,
         'name': 'thumbnail example',
         'host': 'http://app.u17.com',

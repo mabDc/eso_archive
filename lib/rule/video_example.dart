@@ -1,5 +1,5 @@
-class ExampleVideo {
-  Map<String, dynamic> get rule => {
+class VideoExample {
+  Map<dynamic, dynamic> get rule => {
         'enable': true,
         'name': 'video example',
         'host': 'http://www.zzzfun.com',
@@ -9,6 +9,9 @@ class ExampleVideo {
 // you can use variable as following
 // host as 'http://www.zzzfun.com'
 // page as current page
+// url can be a string or map
+// map is like {url, headers, method, body}
+// headers is map, body can be string or list or map
 `\${host}/vod-type-id-1-page-\${page}.html`''',
         'discoverItems': '''
 // you can use variable as following

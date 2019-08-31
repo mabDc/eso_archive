@@ -4,7 +4,7 @@ class Setting {
   // home page settings
   bool enTabBar = true;
   bool enAutoRefresh = false;
-  // read settings
+  // content settings
   bool enFullScreen = true;
   bool enVolumeControl = false;
   bool enFlippingAnimation = false;

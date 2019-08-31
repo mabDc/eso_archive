@@ -7,6 +7,7 @@ import '../ui/custom_list_tile.dart';
 import '../utils/custom_item.dart';
 import '../ui/show_error.dart';
 import '../global/global.dart';
+import '../utils/parser.dart';
 
 class ThumbnailDetailPage extends StatefulWidget {
   ThumbnailDetailPage({
@@ -40,7 +41,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
     dynamic url = await jsContext.evaluateScript(widget.rule.detailUrl);
     if (url != null && url is String && url.trim() != '') {
       await jsContext.setProperty('url', url);
-      final response = await http.get(url?.toString() ?? '');
+      final response = await Parser().urlToResponse(url);
       await jsContext.setProperty('body', response.body);
     }
     dynamic detailItems =
@@ -50,7 +51,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
     url = await jsContext.evaluateScript(widget.rule.chapterUrl);
     if (url != null && url is String && url.trim() != '') {
       await jsContext.setProperty('url', url);
-      final response = await http.get(url?.toString() ?? '');
+      final response = await Parser().urlToResponse(url);
       await jsContext.setProperty('body', response.body);
     }
     dynamic chapterItems =
@@ -87,6 +88,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
         ),
       ));
     }
+
     if (detailItems is String) {
       detailItems = [detailItems];
     }
@@ -120,6 +122,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
         }
       }
     });
+
   }
 
   void chapterBuild(dynamic chapterItems) {
@@ -148,7 +151,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
             await widget.jsContext.evaluateScript(widget.rule.contentUrl);
         if (url != null && url is String && url.trim() != '') {
           await widget.jsContext.setProperty('url', url);
-          final response = await http.get(url?.toString() ?? '');
+          final response = await Parser().urlToResponse(url);
           await widget.jsContext.setProperty('body', response.body);
         }
         dynamic detailItems =
@@ -161,7 +164,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
               return Image.network(items[index]);
             },
           );
-          return Global().option.enFullScreen
+          return Global().setting.enFullScreen
               ? Scaffold(
                   body: body,
                 )

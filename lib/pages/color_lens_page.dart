@@ -17,7 +17,7 @@ class _ColorLensPageState extends State<ColorLensPage> {
   @override
   void initState() {
     super.initState();
-    Color _customColor = Color(Global().option.customColorValue);
+    Color _customColor = Color(Global().setting.customColorValue);
     r = TextEditingController(text: _customColor.red.toString());
     g = TextEditingController(text: _customColor.green.toString());
     b = TextEditingController(text: _customColor.blue.toString());
@@ -37,23 +37,23 @@ class _ColorLensPageState extends State<ColorLensPage> {
               return Card(
                 child: OptionSwitch(
                   title: Text('Night Mode'),
-                  value: Global().option.enBrightnessDark,
+                  value: Global().setting.enBrightnessDark,
                   onChange: (value) async {
-                    Global().option.enBrightnessDark = value;
-                    await Global().saveOption();
+                    Global().setting.enBrightnessDark = value;
+                    await Global().saveSetting();
                     Global().setTheme(() {});
                   },
                   onTap: () async {
-                    Global().option.enBrightnessDark =
-                        !Global().option.enBrightnessDark;
-                    await Global().saveOption();
+                    Global().setting.enBrightnessDark =
+                        !Global().setting.enBrightnessDark;
+                    await Global().saveSetting();
                     Global().setTheme(() {});
                   },
                 ),
               );
               break;
             case 1:
-              Color _customColorValue = Color(Global().option.customColorValue);
+              Color _customColorValue = Color(Global().setting.customColorValue);
               return Card(
                 child: ColorListTile(
                   title: _enEdit
@@ -72,7 +72,7 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
                                   setState(() {
-                                    Global().option.customColorValue =
+                                    Global().setting.customColorValue =
                                         Color.fromARGB(
                                       0xff,
                                       _r > 0xff ? 0xff : _r,
@@ -85,14 +85,14 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _r = int.parse(r.text);
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
-                                  Global().option.customColorValue =
+                                  Global().setting.customColorValue =
                                       Color.fromARGB(
                                     0xff,
                                     _r > 0xff ? 0xff : _r,
                                     _g > 0xff ? 0xff : _g,
                                     _b > 0xff ? 0xff : _b,
                                   ).value;
-                                  await Global().saveOption();
+                                  await Global().saveSetting();
                                   setState(() {
                                     _enEdit = false;
                                   });
@@ -113,7 +113,7 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
                                   setState(() {
-                                    Global().option.customColorValue =
+                                    Global().setting.customColorValue =
                                         Color.fromARGB(
                                       0xff,
                                       _r > 0xff ? 0xff : _r,
@@ -126,14 +126,14 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _r = int.parse(r.text);
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
-                                  Global().option.customColorValue =
+                                  Global().setting.customColorValue =
                                       Color.fromARGB(
                                     0xff,
                                     _r > 0xff ? 0xff : _r,
                                     _g > 0xff ? 0xff : _g,
                                     _b > 0xff ? 0xff : _b,
                                   ).value;
-                                  await Global().saveOption();
+                                  await Global().saveSetting();
                                   setState(() {
                                     _enEdit = false;
                                   });
@@ -153,7 +153,7 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
                                   setState(() {
-                                    Global().option.customColorValue =
+                                    Global().setting.customColorValue =
                                         Color.fromARGB(
                                       0xff,
                                       _r > 0xff ? 0xff : _r,
@@ -166,14 +166,14 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _r = int.parse(r.text);
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
-                                  Global().option.customColorValue =
+                                  Global().setting.customColorValue =
                                       Color.fromARGB(
                                     0xff,
                                     _r > 0xff ? 0xff : _r,
                                     _g > 0xff ? 0xff : _g,
                                     _b > 0xff ? 0xff : _b,
                                   ).value;
-                                  await Global().saveOption();
+                                  await Global().saveSetting();
                                   setState(() {
                                     _enEdit = false;
                                   });
@@ -189,9 +189,9 @@ class _ColorLensPageState extends State<ColorLensPage> {
                       : Text('tap to active & long press to edit'),
                   color: _customColorValue,
                   onTap: () async {
-                    Global().option.colorValue =
-                        Global().option.customColorValue;
-                    await Global().saveOption();
+                    Global().setting.colorValue =
+                        Global().setting.customColorValue;
+                    await Global().saveSetting();
                     Global().setTheme(() {});
                   },
                   onLongPress: () async {
@@ -210,8 +210,8 @@ class _ColorLensPageState extends State<ColorLensPage> {
                       'r:${primaryColor.red} g:${primaryColor.green} b:${primaryColor.blue}'),
                   color: primaryColor,
                   onTap: () async {
-                    Global().option.colorValue = primaryColor.value;
-                    await Global().saveOption();
+                    Global().setting.colorValue = primaryColor.value;
+                    await Global().saveSetting();
                     Global().setTheme(() {});
                   },
                 ),

@@ -25,30 +25,31 @@ class _SettingPageState extends State<SettingPage> {
               children: <Widget>[
                 OptionSwitch(
                   title: Text('Tap Bar Navigator'),
-                  value: Global().option.enTabBar,
+                  value: Global().setting.enTabBar,
                   onChange: (value) async {
-                    Global().option.enTabBar = value;
-                    await Global().saveOption();
+                    Global().setting.enTabBar = value;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                   onTap: () async {
-                    Global().option.enTabBar = !Global().option.enTabBar;
-                    await Global().saveOption();
+                    Global().setting.enTabBar = !Global().setting.enTabBar;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                 ),
                 OptionSwitch(
                   title: Text('Auto Refresh'),
-                  value: Global().option.enAutoRefresh,
+                  subtitle: Text('not yet'),
+                  value: Global().setting.enAutoRefresh,
                   onChange: (value) async {
-                    Global().option.enAutoRefresh = value;
-                    await Global().saveOption();
+                    Global().setting.enAutoRefresh = value;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                   onTap: () async {
-                    Global().option.enAutoRefresh =
-                        !Global().option.enAutoRefresh;
-                    await Global().saveOption();
+                    Global().setting.enAutoRefresh =
+                        !Global().setting.enAutoRefresh;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                 ),
@@ -56,53 +57,56 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('reading settings'),
+            title: PrimaryColorText('content settings'),
           ),
           Card(
             child: Column(
               children: <Widget>[
                 OptionSwitch(
                   title: Text('Full Screen'),
-                  value: Global().option.enFullScreen,
+                  subtitle: Text('also apply in thumbnail and video'),
+                  value: Global().setting.enFullScreen,
                   onChange: (value) async {
-                    Global().option.enFullScreen = value;
-                    await Global().saveOption();
+                    Global().setting.enFullScreen = value;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                   onTap: () async {
-                    Global().option.enFullScreen =
-                        !Global().option.enFullScreen;
-                    await Global().saveOption();
+                    Global().setting.enFullScreen =
+                        !Global().setting.enFullScreen;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                 ),
                 OptionSwitch(
                   title: Text('Volume Control'),
-                  value: Global().option.enVolumeControl,
+                  subtitle: Text('not yet'),
+                  value: Global().setting.enVolumeControl,
                   onChange: (value) async {
-                    Global().option.enVolumeControl = value;
-                    await Global().saveOption();
+                    Global().setting.enVolumeControl = value;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                   onTap: () async {
-                    Global().option.enVolumeControl =
-                        !Global().option.enVolumeControl;
-                    await Global().saveOption();
+                    Global().setting.enVolumeControl =
+                        !Global().setting.enVolumeControl;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                 ),
                 OptionSwitch(
                   title: Text('Flipping Animation'),
-                  value: Global().option.enFlippingAnimation,
+                  subtitle: Text('not yet'),
+                  value: Global().setting.enFlippingAnimation,
                   onChange: (value) async {
-                    Global().option.enFlippingAnimation = value;
-                    await Global().saveOption();
+                    Global().setting.enFlippingAnimation = value;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                   onTap: () async {
-                    Global().option.enFlippingAnimation =
-                        !Global().option.enFlippingAnimation;
-                    await Global().saveOption();
+                    Global().setting.enFlippingAnimation =
+                        !Global().setting.enFlippingAnimation;
+                    await Global().saveSetting();
                     setState(() {});
                   },
                 ),
@@ -117,7 +121,7 @@ class _SettingPageState extends State<SettingPage> {
               children: <Widget>[
                 ListTile(
                   title: Text('download path'),
-                  subtitle: Text('/root'),
+                  subtitle: Text('not yet'),
                 ),
               ],
             ),

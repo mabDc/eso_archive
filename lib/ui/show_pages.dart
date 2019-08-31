@@ -53,7 +53,7 @@ class ShowPages extends StatelessWidget {
               dynamic url = await jsContext.evaluateScript(
                   keyword == null ? rule.discoverUrl : rule.searchUrl);
               await jsContext.setProperty('url', url);
-              final response = await http.get(url?.toString() ?? '');
+              final response = await Parser().urlToResponse(url);
               await jsContext.setProperty('body', response.body);
               return jsContext.evaluateScript(
                   keyword == null ? rule.discoverItems : rule.searchItems);

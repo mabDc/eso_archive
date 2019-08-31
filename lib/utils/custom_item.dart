@@ -31,7 +31,7 @@ class CustomItem {
         publishDate = json['publishDate'],
         readDuration = json['readDuration'];
         
-  Map<String, dynamic> toJson() => {
+  Map<dynamic, dynamic> toJson() => {
         'thumbnailUrl': thumbnailUrl,
         'title': title,
         'subtitle': subtitle,

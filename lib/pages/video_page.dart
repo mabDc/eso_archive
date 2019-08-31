@@ -7,6 +7,8 @@ import '../utils/rule.dart';
 import '../ui/primary_color_text.dart';
 import '../ui/custom_list_tile.dart';
 import '../utils/custom_item.dart';
+import '../global/global.dart';
+import '../utils/parser.dart';
 
 class VideoPage extends StatefulWidget {
   VideoPage({
@@ -50,7 +52,7 @@ class _VideoPageState extends State<VideoPage>
     dynamic url = await jsContext.evaluateScript(widget.rule.detailUrl);
     if (url != null && url is String && url.trim() != '') {
       await jsContext.setProperty('url', url);
-      final response = await http.get(url?.toString() ?? '');
+      final response = await Parser().urlToResponse(url);
       await jsContext.setProperty('body', response.body);
     }
     dynamic detailItems =
@@ -60,7 +62,7 @@ class _VideoPageState extends State<VideoPage>
     url = await jsContext.evaluateScript(widget.rule.chapterUrl);
     if (url != null && url is String && url.trim() != '') {
       await jsContext.setProperty('url', url);
-      final response = await http.get(url?.toString() ?? '');
+      final response = await Parser().urlToResponse(url);
       await jsContext.setProperty('body', response.body);
     }
     dynamic chapterItems =
@@ -81,53 +83,58 @@ class _VideoPageState extends State<VideoPage>
       }
     }
     initPage();
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Column(
-        children: <Widget>[
-          url == null
-              ? Container(
-                  height: 220,
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
-                )
-              : Chewie(
-                  controller: ChewieController(
-                  videoPlayerController: videoPlayerController,
-                  aspectRatio: 16 / 9,
-                  autoPlay: true,
-                )),
-          Material(
-            color: Theme.of(context).primaryColor,
-            child: TabBar(
-              controller: tabcontroller,
-              indicatorColor: Theme.of(context).primaryTextTheme.title.color,
-              labelColor: Theme.of(context).primaryTextTheme.title.color,
-              unselectedLabelColor: Theme.of(context)
-                  .primaryTextTheme
-                  .title
-                  .color
-                  .withOpacity(0.75),
-              tabs: <Tab>[
-                Tab(text: 'list'),
-                Tab(text: 'desc'),
-              ],
+    final body = Column(
+      children: <Widget>[
+        url == null
+            ? Container(
+                height: 220,
+                color: Theme.of(context).primaryColor.withOpacity(0.1),
+              )
+            : Chewie(
+                controller: ChewieController(
+                videoPlayerController: videoPlayerController,
+                aspectRatio: 16 / 9,
+                autoPlay: true,
+              )),
+        Material(
+          color: Theme.of(context).primaryColor,
+          child: TabBar(
+            controller: tabcontroller,
+            indicatorColor: Theme.of(context).primaryTextTheme.title.color,
+            labelColor: Theme.of(context).primaryTextTheme.title.color,
+            unselectedLabelColor: Theme.of(context)
+                .primaryTextTheme
+                .title
+                .color
+                .withOpacity(0.75),
+            tabs: <Tab>[
+              Tab(text: 'list'),
+              Tab(text: 'desc'),
+            ],
+          ),
+        ),
+        Expanded(
+          child: TabBarView(controller: tabcontroller, children: <Widget>[
+            ListView.builder(
+              itemCount: chapter.length,
+              itemBuilder: (context, index) => chapter[index],
             ),
-          ),
-          Expanded(
-            child: TabBarView(controller: tabcontroller, children: <Widget>[
-              ListView.builder(
-                itemCount: chapter.length,
-                itemBuilder: (context, index) => chapter[index],
-              ),
-              ListView.builder(
-                itemCount: info.length,
-                itemBuilder: (context, index) => info[index],
-              ),
-            ]),
-          ),
-        ],
-      ),
+            ListView.builder(
+              itemCount: info.length,
+              itemBuilder: (context, index) => info[index],
+            ),
+          ]),
+        ),
+      ],
     );
+    return Global().setting.enFullScreen
+        ? Scaffold(
+            body: body,
+          )
+        : Scaffold(
+            appBar: AppBar(title: Text(title)),
+            body: body,
+          );
   }
 
   void detailBuild(dynamic detailItems) {
@@ -160,15 +167,49 @@ class _VideoPageState extends State<VideoPage>
     }
     // info.add(Divider());
 
+    // if (detailItems is String) {
+    //   detailItems = [detailItems];
+    // }
+    // detailItems.forEach((item) {
+    //   info.add(Card(
+    //     child: ListTile(
+    //       title: Text('$item'),
+    //     ),
+    //   ));
+    // });
+
     if (detailItems is String) {
       detailItems = [detailItems];
     }
     detailItems.forEach((item) {
-      info.add(Card(
-        child: ListTile(
-          title: Text('$item'),
-        ),
-      ));
+      if (item is String) {
+        info.add(Card(
+          child: ListTile(
+            title: Text('$item'),
+          ),
+        ));
+      } else if (item is Map) {
+        dynamic type = item['type'];
+        if (type == 'thumbnail') {
+          dynamic thumbnailUrl = item["thumbnailUrl"];
+          if (thumbnailUrl != null && thumbnailUrl != '') {
+            info.add(Card(
+              child: Image.network(thumbnailUrl),
+            ));
+          }
+        } else {
+          info.add(Card(
+            child: ListTile(
+              leading: item['thumbnailUrl'] == null
+                  ? null
+                  : Image.network(item['thumbnailUrl']),
+              title: Text(item['title']?.toString() ?? ''),
+              subtitle: Text(item['subtitle']?.toString() ?? ''),
+              trailing: Text(item['trailing']?.toString() ?? ''),
+            ),
+          ));
+        }
+      }
     });
   }
 

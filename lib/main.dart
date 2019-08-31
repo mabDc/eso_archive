@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'global/global.dart';
+import 'global/SqlGlobal.dart';
 import 'pages/theme_proxy_page.dart';
 import 'ui/show_error.dart';
 
 void main() async {
   await Global().init();
+  await SqlGlobal().init();
+
   ErrorWidget.builder = (FlutterErrorDetails err){
     String errorMsg = err.toString() + '\n' + err.toString();
     return ShowError(errorMsg: errorMsg,);

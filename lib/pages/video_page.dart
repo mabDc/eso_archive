@@ -140,7 +140,7 @@ class _VideoPageState extends State<VideoPage>
     dynamic item = widget.item;
     title = '${item['title']}';
     if (item["type"] == 'customListTile') {
-      info.add(CustomListTile(itemJson: item));
+      info.add(CustomListItem(itemJson: item));
     } else {
       info.add(Card(
         child: ListTile(

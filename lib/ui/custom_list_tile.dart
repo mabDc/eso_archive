@@ -82,8 +82,8 @@ class _ArticleDescription extends StatelessWidget {
   }
 }
 
-class CustomListTile extends StatelessWidget {
-  CustomListTile({
+class CustomListItem extends StatelessWidget {
+  CustomListItem({
     Key key,
     // this.thumbnail,
     // this.title,

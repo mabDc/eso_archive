@@ -150,7 +150,7 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
                     }));
 
                 if (_item["type"] == 'customListTile') {
-                  return CustomListTile(itemJson: _item,onTap: onTap,);
+                  return CustomListItem(itemJson: _item,onTap: onTap,);
                 }
                 return Card(
                   child: ListTile(

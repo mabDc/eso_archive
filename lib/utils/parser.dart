@@ -8,14 +8,10 @@ class Parser {
     if (url is Map) {
       url = (url as Map).map((k, v) => MapEntry(k.toString().toLowerCase(), v));
 
-      Map<String, String> headers = Map<String, String>()
-        ..addAll({
-          'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
-        })
-        ..addAll((url['headers'] as Map)
-                ?.map((k, v) => MapEntry(k.toString(), v?.toString())) ??
-            Map());
+      Map<String, String> headers = {
+        'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
+      }..addAll(Map<String, String>.from(url['headers'] ?? Map()));
 
       dynamic body = url['body'];
       dynamic method = url['method']?.toString()?.toLowerCase();

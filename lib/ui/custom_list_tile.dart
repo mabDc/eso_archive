@@ -30,18 +30,19 @@ class _ArticleDescription extends StatelessWidget {
                 '$title',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(bottom: 2.0)),
+              Padding(padding: EdgeInsets.only(bottom: 2.0)),
               Text(
                 '$subtitle',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12.0,
-                  color: Colors.black54,
+                  color:
+                      Theme.of(context).textTheme.body1.color.withOpacity(0.54),
                 ),
               ),
             ],
@@ -57,18 +58,20 @@ class _ArticleDescription extends StatelessWidget {
                 '$author',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12.0,
-                  color: Colors.black87,
+                  color:
+                      Theme.of(context).textTheme.body1.color.withOpacity(0.87),
                 ),
               ),
               Text(
                 '$publishDate - $readDuration',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12.0,
-                  color: Colors.black54,
+                  color:
+                      Theme.of(context).textTheme.body1.color.withOpacity(0.54),
                 ),
               ),
             ],
@@ -82,55 +85,101 @@ class _ArticleDescription extends StatelessWidget {
 class CustomListTile extends StatelessWidget {
   CustomListTile({
     Key key,
-    this.thumbnail,
-    this.title,
-    this.subtitle,
-    this.author,
-    this.publishDate,
-    this.readDuration,
-    this.onTap
+    // this.thumbnail,
+    // this.title,
+    // this.subtitle,
+    // this.author,
+    // this.publishDate,
+    // this.readDuration,
+    this.onTap,
+    this.itemJson,
   }) : super(key: key);
 
-  final Widget thumbnail;
-  final String title;
-  final String subtitle;
-  final String author;
-  final String publishDate;
-  final String readDuration;
+  // final Widget thumbnail;
+  // final String title;
+  // final String subtitle;
+  // final String author;
+  // final String publishDate;
+  // final String readDuration;
+  final dynamic itemJson;
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
+    final item = _CustomItem.safeFromJson(itemJson ?? Map());
     return InkWell(
       onTap: onTap,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SizedBox(
-            height: 100,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1.0,
-                  child: thumbnail,
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
-                    child: _ArticleDescription(
-                      title: title,
-                      subtitle: subtitle,
-                      author: author,
-                      publishDate: publishDate,
-                      readDuration: readDuration,
-                    ),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SizedBox(
+          height: 100,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              AspectRatio(
+                aspectRatio: 1.0,
+                child: item.thumbnailUrl == null
+                    ? Container()
+                    : Image.network(item.thumbnailUrl),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
+                  child: _ArticleDescription(
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    author: item.author,
+                    publishDate: item.publishDate,
+                    readDuration: item.readDuration,
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+class _CustomItem {
+  final String thumbnailUrl;
+  final String title;
+  final String subtitle;
+  final String author;
+  final String publishDate;
+  final String readDuration;
+
+  _CustomItem.safeFromJson(Map json)
+      : thumbnailUrl = json['thumbnailUrl']?.toString() ?? '',
+        title = json['title']?.toString() ?? '',
+        subtitle = json['subtitle']?.toString() ?? '',
+        author = json['author']?.toString() ?? '',
+        publishDate = json['publishDate']?.toString() ?? '',
+        readDuration = json['readDuration']?.toString() ?? '';
+
+  // CustomItem({
+  //   this.thumbnailUrl,
+  //   this.title,
+  //   this.subtitle,
+  //   this.author,
+  //   this.publishDate,
+  //   this.readDuration,
+  // });
+
+  // CustomItem.fromJson(Map<dynamic, dynamic> json)
+  //     : thumbnailUrl = json['thumbnailUrl'],
+  //       title = json['title'],
+  //       subtitle = json['subtitle'],
+  //       author = json['author'],
+  //       publishDate = json['publishDate'],
+  //       readDuration = json['readDuration'];
+
+  // Map<dynamic, dynamic> toJson() => {
+  //       'thumbnailUrl': thumbnailUrl,
+  //       'title': title,
+  //       'subtitle': subtitle,
+  //       'author': author,
+  //       'publishDate': publishDate,
+  //       'readDuration': readDuration,
+  //     };
 }

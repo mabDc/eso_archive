@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_liquidcore/liquidcore.dart';
-import 'package:http/http.dart' as http;
 
 import '../utils/rule.dart';
-import '../utils/custom_item.dart';
 import '../ui/show_items.dart';
 import '../ui/show_error.dart';
 import '../ui/custom_list_tile.dart';
@@ -152,15 +150,7 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
                     }));
 
                 if (_item["type"] == 'customListTile') {
-                  final item = CustomItem.safeFromJson(_item);
-                  return CustomListTile(
-                      thumbnail: Image.network(item.thumbnailUrl),
-                      title: item.title,
-                      subtitle: item.subtitle,
-                      author: item.author,
-                      publishDate: item.publishDate,
-                      readDuration: item.readDuration,
-                      onTap: onTap);
+                  return CustomListTile(itemJson: _item,onTap: onTap,);
                 }
                 return Card(
                   child: ListTile(

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_liquidcore/liquidcore.dart';
-import 'package:http/http.dart' as http;
 import '../utils/rule.dart';
 import '../ui/primary_color_text.dart';
 import '../ui/custom_list_tile.dart';
-import '../utils/custom_item.dart';
 import '../ui/show_error.dart';
 import '../global/global.dart';
 import '../utils/parser.dart';
@@ -38,8 +36,8 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
     }
     final jsContext = widget.jsContext;
     await jsContext.setProperty('item', widget.item);
-    dynamic url = await jsContext.evaluateScript(widget.rule.detailUrl);
-    if (url != null && url is String && url.trim() != '') {
+    if (widget.rule.detailUrl != null && widget.rule.detailUrl.trim() != '') {
+      final url = await jsContext.evaluateScript(widget.rule.detailUrl);
       await jsContext.setProperty('url', url);
       final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
@@ -48,8 +46,8 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
         await jsContext.evaluateScript(widget.rule.detailItems);
     detailBuild(detailItems);
 
-    url = await jsContext.evaluateScript(widget.rule.chapterUrl);
-    if (url != null && url is String && url.trim() != '') {
+    if (widget.rule.chapterUrl != null && widget.rule.chapterUrl.trim() != '') {
+      final url = await jsContext.evaluateScript(widget.rule.chapterUrl);
       await jsContext.setProperty('url', url);
       final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
@@ -61,29 +59,21 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
   }
 
   void detailBuild(dynamic detailItems) {
-    dynamic _item = widget.item;
-    title = '${_item['title']}';
-    if (_item["type"] == 'customListTile') {
-      final item = CustomItem.safeFromJson(_item);
-      info.add(CustomListTile(
-        thumbnail: Image.network(item.thumbnailUrl),
-        title: item.title,
-        subtitle: item.subtitle,
-        author: item.author,
-        publishDate: item.publishDate,
-        readDuration: item.readDuration,
-      ));
+    dynamic item = widget.item;
+    title = '${item['title']}';
+    if (item["type"] == 'customListTile') {
+      info.add(CustomListTile(itemJson: item));
     } else {
       info.add(Card(
         child: ListTile(
-          leading: Image.network('${_item['thumbnailUrl']}'),
-          title: Text('${_item['title']}'),
+          leading: Image.network('${item['thumbnailUrl']}'),
+          title: Text('${item['title']}'),
           subtitle: Text(
-            '${_item['subtitle']}',
+            '${item['subtitle']}',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-          trailing: Text('${_item['trailing']}'),
+          trailing: Text('${item['trailing']}'),
           isThreeLine: true,
         ),
       ));
@@ -122,7 +112,6 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
         }
       }
     });
-
   }
 
   void chapterBuild(dynamic chapterItems) {
@@ -133,8 +122,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
                   title: Text('enMultiRoads error'),
                 ),
                 body: ShowError(
-                  errorMsg:
-                      'enMultiRoads not yet in rule ${widget.rule.name}',
+                  errorMsg: 'enMultiRoads not yet in rule ${widget.rule.name}',
                 ),
               )));
       return;
@@ -147,9 +135,11 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
     items.forEach((item) {
       final onTap = () async {
         await widget.jsContext.setProperty('item', item);
-        dynamic url =
-            await widget.jsContext.evaluateScript(widget.rule.contentUrl);
-        if (url != null && url is String && url.trim() != '') {
+
+        if (widget.rule.contentUrl != null &&
+            widget.rule.contentUrl.trim() != '') {
+          final url =
+              await widget.jsContext.evaluateScript(widget.rule.contentUrl);
           await widget.jsContext.setProperty('url', url);
           final response = await Parser().urlParser(url);
           await widget.jsContext.setProperty('body', response.body);
@@ -159,6 +149,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
         List items = detailItems;
         return Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           final body = ListView.builder(
+            padding: EdgeInsets.zero,
             itemCount: items.length,
             itemBuilder: (context, index) {
               return Image.network(items[index]);

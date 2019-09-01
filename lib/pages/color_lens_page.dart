@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../ui/color_list_tile.dart';
 import '../global/global.dart';
 import '../ui/option_switch.dart';
 
@@ -53,9 +52,17 @@ class _ColorLensPageState extends State<ColorLensPage> {
               );
               break;
             case 1:
-              Color _customColorValue = Color(Global().setting.customColorValue);
+              Color _customColorValue =
+                  Color(Global().setting.customColorValue);
               return Card(
-                child: ColorListTile(
+                child: ListTile(
+                  // color: _customColorValue,
+                  leading: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: _customColorValue),
+                    height: 32,
+                    width: 32,
+                  ),
                   title: _enEdit
                       ? Row(
                           children: <Widget>[
@@ -187,7 +194,6 @@ class _ColorLensPageState extends State<ColorLensPage> {
                   subtitle: _enEdit
                       ? Container()
                       : Text('tap to active & long press to edit'),
-                  color: _customColorValue,
                   onTap: () async {
                     Global().setting.colorValue =
                         Global().setting.customColorValue;
@@ -205,10 +211,16 @@ class _ColorLensPageState extends State<ColorLensPage> {
             default:
               final primaryColor = Colors.primaries[index - 2];
               return Card(
-                child: ColorListTile(
+                child: ListTile(
+                  leading: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: primaryColor),
+                    height: 32,
+                    width: 32,
+                  ),
+                  //color: primaryColor,
                   title: Text(
                       'r:${primaryColor.red} g:${primaryColor.green} b:${primaryColor.blue}'),
-                  color: primaryColor,
                   onTap: () async {
                     Global().setting.colorValue = primaryColor.value;
                     await Global().saveSetting();

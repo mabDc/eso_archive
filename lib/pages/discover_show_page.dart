@@ -37,7 +37,7 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
     super.initState();
     jsContext = JSContext();
   }
-
+  
   Future<bool> initJSContext() async {
     if (widget.rule.enCheerio) {
       String script =
@@ -115,7 +115,7 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
                         ? widget.rule.discoverUrl
                         : widget.rule.searchUrl);
                 await jsContext.setProperty('url', url);
-                final response = await Parser().urlToResponse(url);
+                final response = await Parser().urlParser(url);
                 await jsContext.setProperty('body', response.body);
                 return jsContext.evaluateScript(widget.keyword == null
                     ? widget.rule.discoverItems

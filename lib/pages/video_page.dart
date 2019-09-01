@@ -52,7 +52,7 @@ class _VideoPageState extends State<VideoPage>
     dynamic url = await jsContext.evaluateScript(widget.rule.detailUrl);
     if (url != null && url is String && url.trim() != '') {
       await jsContext.setProperty('url', url);
-      final response = await Parser().urlToResponse(url);
+      final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
     }
     dynamic detailItems =
@@ -62,7 +62,7 @@ class _VideoPageState extends State<VideoPage>
     url = await jsContext.evaluateScript(widget.rule.chapterUrl);
     if (url != null && url is String && url.trim() != '') {
       await jsContext.setProperty('url', url);
-      final response = await Parser().urlToResponse(url);
+      final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
     }
     dynamic chapterItems =

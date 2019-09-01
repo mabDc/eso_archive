@@ -41,7 +41,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
     dynamic url = await jsContext.evaluateScript(widget.rule.detailUrl);
     if (url != null && url is String && url.trim() != '') {
       await jsContext.setProperty('url', url);
-      final response = await Parser().urlToResponse(url);
+      final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
     }
     dynamic detailItems =
@@ -51,7 +51,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
     url = await jsContext.evaluateScript(widget.rule.chapterUrl);
     if (url != null && url is String && url.trim() != '') {
       await jsContext.setProperty('url', url);
-      final response = await Parser().urlToResponse(url);
+      final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
     }
     dynamic chapterItems =
@@ -151,7 +151,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
             await widget.jsContext.evaluateScript(widget.rule.contentUrl);
         if (url != null && url is String && url.trim() != '') {
           await widget.jsContext.setProperty('url', url);
-          final response = await Parser().urlToResponse(url);
+          final response = await Parser().urlParser(url);
           await widget.jsContext.setProperty('body', response.body);
         }
         dynamic detailItems =

@@ -6,7 +6,6 @@ import '../ui/custom_list_tile.dart';
 import '../ui/show_error.dart';
 import '../global/global.dart';
 import '../utils/parser.dart';
-
 class ThumbnailDetailPage extends StatefulWidget {
   ThumbnailDetailPage({
     @required this.rule,
@@ -22,6 +21,7 @@ class ThumbnailDetailPage extends StatefulWidget {
 }
 
 class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
+  
   final List<Widget> chapter = <Widget>[];
   final List<Widget> info = <Widget>[];
   String title = '';
@@ -155,7 +155,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
               return Image.network(items[index]);
             },
           );
-          return Global().setting.enFullScreen
+          return Global.profile.enFullScreen
               ? Scaffold(
                   body: body,
                 )

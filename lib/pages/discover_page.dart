@@ -1,13 +1,9 @@
-import 'dart:convert';
-
-import 'package:eso/global/global.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../utils/rule.dart';
 import 'rule_edit_page.dart';
 import 'discover_show_page.dart';
-import '../global/global.dart';
-
+import '../rule/thumbnail_example.dart';
+import '../rule/video_example.dart';
 class DiscoverPage extends StatefulWidget {
   @override
   _DiscoverPageState createState() => _DiscoverPageState();
@@ -20,10 +16,13 @@ class _DiscoverPageState extends State<DiscoverPage> {
     //   Rule.safeFromJson(ExampleVideo().rule),
     //   Rule.safeFromJson(ThumbnailExample().rule),
     // ];
-    List<dynamic> rules = <dynamic>[];
-    Global().rule.forEach((id, ruleJson) {
-      rules.add(Rule.safeFromJson(ruleJson));
-    });
+    List<dynamic> rules = <dynamic>[
+        Rule.safeFromJson(VideoExample().rule),
+        Rule.safeFromJson(ThumbnailExample().rule)
+    ];
+    // Global().rule.forEach((id, ruleJson) {
+    //   rules.add(Rule.safeFromJson(ruleJson));
+    // });
     return Scaffold(
       appBar: AppBar(
         title: Text('discover'),
@@ -51,8 +50,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     IconButton(
                       icon: Icon(Icons.input),
                       onPressed: () async{
-                        await Clipboard.setData(
-                          ClipboardData(text: jsonEncode(Global().rule)));
+                        // await Clipboard.setData(
+                        //   ClipboardData(text: jsonEncode(Global().rule)));
                       },
                     ),
                   ],
@@ -66,11 +65,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 leading: IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () async{
-                    Global().rule.remove(rule.id.toString());
-                    await Global().saveRule();
-                    setState(() {
+                    // Global().rule.remove(rule.id.toString());
+                    // await Global().saveRule();
+                    // setState(() {
                       
-                    });
+                    // });
                   },
                 ),
                 title: Text(rule.name),

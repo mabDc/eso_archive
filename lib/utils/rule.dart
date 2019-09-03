@@ -90,6 +90,11 @@ class Rule {
 // title;
 // subtitle;
 // lock 
+(()=>{
+  var items = [];
+
+  return items;
+})();
 ''';
   String contentUrl = 'item.url';
   String contentItems = '';

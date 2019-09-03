@@ -126,7 +126,7 @@ class _VideoPageState extends State<VideoPage>
         ),
       ],
     );
-    return Global().setting.enFullScreen
+    return Global.profile.enFullScreen
         ? Scaffold(
             body: body,
           )

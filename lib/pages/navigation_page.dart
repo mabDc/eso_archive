@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../global/global.dart';
 import 'about_page.dart';
 import 'discover_page.dart';
 import 'home_page.dart';
+import '../global/global.dart';
 
 class NavigationPage extends StatefulWidget {
   @override
@@ -13,7 +13,6 @@ class _NavigationPageState extends State<NavigationPage>
     with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
   TabController _tabController;
-
   @override
   void initState() {
     super.initState();
@@ -43,13 +42,13 @@ class _NavigationPageState extends State<NavigationPage>
     ];
 
     return Scaffold(
-      body: Global().setting.enTabBar
+      body: Global.profile.enTabBar
           ? TabBarView(
               controller: _tabController,
               children: pages,
             )
           : pages[_currentIndex],
-      bottomNavigationBar: Global().setting.enTabBar
+      bottomNavigationBar: Global.profile.enTabBar
           ? Material(
               color: Theme.of(context).primaryColor,
               child: TabBar(

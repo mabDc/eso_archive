@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../global/global.dart';
-import '../ui/option_switch.dart';
+import 'package:provider/provider.dart';
+import '../global/profile_change_notifier.dart';
 
 class ColorLensPage extends StatefulWidget {
   @override
@@ -16,14 +16,16 @@ class _ColorLensPageState extends State<ColorLensPage> {
   @override
   void initState() {
     super.initState();
-    Color _customColor = Color(Global().setting.customColorValue);
-    r = TextEditingController(text: _customColor.red.toString());
-    g = TextEditingController(text: _customColor.green.toString());
-    b = TextEditingController(text: _customColor.blue.toString());
+    
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeModel>(context);
+    Color _customColor = Color(theme.color);
+    r = TextEditingController(text: _customColor.red.toString());
+    g = TextEditingController(text: _customColor.green.toString());
+    b = TextEditingController(text: _customColor.blue.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text('Color Lens'),
@@ -34,26 +36,17 @@ class _ColorLensPageState extends State<ColorLensPage> {
           switch (index) {
             case 0:
               return Card(
-                child: OptionSwitch(
+                child: SwitchListTile(
                   title: Text('Night Mode'),
-                  value: Global().setting.enBrightnessDark,
-                  onChange: (value) async {
-                    Global().setting.enBrightnessDark = value;
-                    await Global().saveSetting();
-                    Global().setTheme(() {});
-                  },
-                  onTap: () async {
-                    Global().setting.enBrightnessDark =
-                        !Global().setting.enBrightnessDark;
-                    await Global().saveSetting();
-                    Global().setTheme(() {});
+                  value: theme.enDarkMode,
+                  onChanged: (value) async {
+                    theme.enDarkMode = value;
                   },
                 ),
               );
               break;
             case 1:
-              Color _customColorValue =
-                  Color(Global().setting.customColorValue);
+              Color _customColorValue = Color(theme.customColor);
               return Card(
                 child: ListTile(
                   // color: _customColorValue,
@@ -79,8 +72,7 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
                                   setState(() {
-                                    Global().setting.customColorValue =
-                                        Color.fromARGB(
+                                    theme.customColor = Color.fromARGB(
                                       0xff,
                                       _r > 0xff ? 0xff : _r,
                                       _g > 0xff ? 0xff : _g,
@@ -88,21 +80,17 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                     ).value;
                                   });
                                 },
-                                onSubmitted: (text) async {
+                                onSubmitted: (text) {
+                                  _enEdit = false;
                                   int _r = int.parse(r.text);
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
-                                  Global().setting.customColorValue =
-                                      Color.fromARGB(
+                                  theme.customColor = Color.fromARGB(
                                     0xff,
                                     _r > 0xff ? 0xff : _r,
                                     _g > 0xff ? 0xff : _g,
                                     _b > 0xff ? 0xff : _b,
                                   ).value;
-                                  await Global().saveSetting();
-                                  setState(() {
-                                    _enEdit = false;
-                                  });
                                 },
                               ),
                             ),
@@ -119,31 +107,24 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _r = int.parse(r.text);
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
-                                  setState(() {
-                                    Global().setting.customColorValue =
-                                        Color.fromARGB(
-                                      0xff,
-                                      _r > 0xff ? 0xff : _r,
-                                      _g > 0xff ? 0xff : _g,
-                                      _b > 0xff ? 0xff : _b,
-                                    ).value;
-                                  });
-                                },
-                                onSubmitted: (text) async {
-                                  int _r = int.parse(r.text);
-                                  int _g = int.parse(g.text);
-                                  int _b = int.parse(b.text);
-                                  Global().setting.customColorValue =
-                                      Color.fromARGB(
+                                  theme.customColor = Color.fromARGB(
                                     0xff,
                                     _r > 0xff ? 0xff : _r,
                                     _g > 0xff ? 0xff : _g,
                                     _b > 0xff ? 0xff : _b,
                                   ).value;
-                                  await Global().saveSetting();
-                                  setState(() {
-                                    _enEdit = false;
-                                  });
+                                },
+                                onSubmitted: (text) {
+                                  _enEdit = false;
+                                  int _r = int.parse(r.text);
+                                  int _g = int.parse(g.text);
+                                  int _b = int.parse(b.text);
+                                  theme.customColor = Color.fromARGB(
+                                    0xff,
+                                    _r > 0xff ? 0xff : _r,
+                                    _g > 0xff ? 0xff : _g,
+                                    _b > 0xff ? 0xff : _b,
+                                  ).value;
                                 },
                               ),
                             ),
@@ -159,31 +140,24 @@ class _ColorLensPageState extends State<ColorLensPage> {
                                   int _r = int.parse(r.text);
                                   int _g = int.parse(g.text);
                                   int _b = int.parse(b.text);
-                                  setState(() {
-                                    Global().setting.customColorValue =
-                                        Color.fromARGB(
-                                      0xff,
-                                      _r > 0xff ? 0xff : _r,
-                                      _g > 0xff ? 0xff : _g,
-                                      _b > 0xff ? 0xff : _b,
-                                    ).value;
-                                  });
-                                },
-                                onSubmitted: (text) async {
-                                  int _r = int.parse(r.text);
-                                  int _g = int.parse(g.text);
-                                  int _b = int.parse(b.text);
-                                  Global().setting.customColorValue =
-                                      Color.fromARGB(
+                                  theme.customColor = Color.fromARGB(
                                     0xff,
                                     _r > 0xff ? 0xff : _r,
                                     _g > 0xff ? 0xff : _g,
                                     _b > 0xff ? 0xff : _b,
                                   ).value;
-                                  await Global().saveSetting();
-                                  setState(() {
-                                    _enEdit = false;
-                                  });
+                                },
+                                onSubmitted: (text) async {
+                                  _enEdit = false;
+                                  int _r = int.parse(r.text);
+                                  int _g = int.parse(g.text);
+                                  int _b = int.parse(b.text);
+                                  theme.customColor = Color.fromARGB(
+                                    0xff,
+                                    _r > 0xff ? 0xff : _r,
+                                    _g > 0xff ? 0xff : _g,
+                                    _b > 0xff ? 0xff : _b,
+                                  ).value;
                                 },
                               ),
                             ),
@@ -195,10 +169,7 @@ class _ColorLensPageState extends State<ColorLensPage> {
                       ? Container()
                       : Text('tap to active & long press to edit'),
                   onTap: () async {
-                    Global().setting.colorValue =
-                        Global().setting.customColorValue;
-                    await Global().saveSetting();
-                    Global().setTheme(() {});
+                    theme.color = theme.customColor;
                   },
                   onLongPress: () async {
                     setState(() {
@@ -222,9 +193,7 @@ class _ColorLensPageState extends State<ColorLensPage> {
                   title: Text(
                       'r:${primaryColor.red} g:${primaryColor.green} b:${primaryColor.blue}'),
                   onTap: () async {
-                    Global().setting.colorValue = primaryColor.value;
-                    await Global().saveSetting();
-                    Global().setTheme(() {});
+                    theme.color = primaryColor.value;
                   },
                 ),
               );

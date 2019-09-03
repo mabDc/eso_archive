@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../ui/primary_color_text.dart';
-import '../ui/option_switch.dart';
-import '../global/global.dart';
+import 'package:provider/provider.dart';
+import '../global/profile_change_notifier.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -11,6 +11,7 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
+    final setting = Provider.of<SettingModel>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('settings'),
@@ -23,34 +24,18 @@ class _SettingPageState extends State<SettingPage> {
           Card(
             child: Column(
               children: <Widget>[
-                OptionSwitch(
+                SwitchListTile(
                   title: Text('Tap Bar Navigator'),
-                  value: Global().setting.enTabBar,
-                  onChange: (value) async {
-                    Global().setting.enTabBar = value;
-                    await Global().saveSetting();
-                    setState(() {});
-                  },
-                  onTap: () async {
-                    Global().setting.enTabBar = !Global().setting.enTabBar;
-                    await Global().saveSetting();
-                    setState(() {});
+                  value: setting.enTabBar,
+                  onChanged: (value) async {
+                    setting.enTabBar = value;
                   },
                 ),
-                OptionSwitch(
+                SwitchListTile(
                   title: Text('Auto Refresh'),
-                  subtitle: Text('not yet'),
-                  value: Global().setting.enAutoRefresh,
-                  onChange: (value) async {
-                    Global().setting.enAutoRefresh = value;
-                    await Global().saveSetting();
-                    setState(() {});
-                  },
-                  onTap: () async {
-                    Global().setting.enAutoRefresh =
-                        !Global().setting.enAutoRefresh;
-                    await Global().saveSetting();
-                    setState(() {});
+                  value: setting.enAutoRefresh,
+                  onChanged: (value) async {
+                    setting.enAutoRefresh = value;
                   },
                 ),
               ],
@@ -62,52 +47,28 @@ class _SettingPageState extends State<SettingPage> {
           Card(
             child: Column(
               children: <Widget>[
-                OptionSwitch(
+                SwitchListTile(
                   title: Text('Full Screen'),
                   subtitle: Text('also apply in thumbnail and video'),
-                  value: Global().setting.enFullScreen,
-                  onChange: (value) async {
-                    Global().setting.enFullScreen = value;
-                    await Global().saveSetting();
-                    setState(() {});
-                  },
-                  onTap: () async {
-                    Global().setting.enFullScreen =
-                        !Global().setting.enFullScreen;
-                    await Global().saveSetting();
-                    setState(() {});
+                  value: setting.enFullScreen,
+                  onChanged: (value) async {
+                    setting.enFullScreen = value;
                   },
                 ),
-                OptionSwitch(
+                SwitchListTile(
                   title: Text('Volume Control'),
                   subtitle: Text('not yet'),
-                  value: Global().setting.enVolumeControl,
-                  onChange: (value) async {
-                    Global().setting.enVolumeControl = value;
-                    await Global().saveSetting();
-                    setState(() {});
-                  },
-                  onTap: () async {
-                    Global().setting.enVolumeControl =
-                        !Global().setting.enVolumeControl;
-                    await Global().saveSetting();
-                    setState(() {});
+                  value: setting.enVolumeControl,
+                  onChanged: (value) async {
+                    setting.enVolumeControl = value;
                   },
                 ),
-                OptionSwitch(
+                SwitchListTile(
                   title: Text('Flipping Animation'),
                   subtitle: Text('not yet'),
-                  value: Global().setting.enFlippingAnimation,
-                  onChange: (value) async {
-                    Global().setting.enFlippingAnimation = value;
-                    await Global().saveSetting();
-                    setState(() {});
-                  },
-                  onTap: () async {
-                    Global().setting.enFlippingAnimation =
-                        !Global().setting.enFlippingAnimation;
-                    await Global().saveSetting();
-                    setState(() {});
+                  value: setting.enFlippingAnimation,
+                  onChanged: (value) async {
+                    setting.enFlippingAnimation = value;
                   },
                 ),
               ],

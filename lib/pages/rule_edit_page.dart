@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:eso/global/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../utils/rule.dart';
-import '../ui/option_switch.dart';
 import '../ui/primary_color_text.dart';
 
 class RuleEditPage extends StatefulWidget {
@@ -50,10 +48,10 @@ class _RuleEditPageState extends State<RuleEditPage> {
           IconButton(
             icon: Icon(Icons.save),
             onPressed: () async {
-              Map<String, dynamic> map = Map<String, dynamic>();
-              map.addAll({rule.id.toString(): rule.toJson()});
-              Global().rule.addAll(map);
-              await Global().saveRule();
+              // Map<String, dynamic> map = Map<String, dynamic>();
+              // map.addAll({rule.id.toString(): rule.toJson()});
+              // Global().rule.addAll(map);
+              // await Global().saveRule();
             },
           ),
           IconButton(
@@ -160,29 +158,19 @@ class _RuleEditPageState extends State<RuleEditPage> {
           Card(
             child: Column(
               children: <Widget>[
-                OptionSwitch(
+                SwitchListTile(
                   value: rule.enable,
                   title: Text('enable'),
-                  onTap: () {
-                    setState(() {
-                      rule.enable = !rule.enable;
-                    });
-                  },
-                  onChange: (value) {
+                  onChanged: (value) {
                     setState(() {
                       rule.enable = value;
                     });
                   },
                 ),
-                OptionSwitch(
+                SwitchListTile(
                   value: rule.enCheerio,
                   title: Text('enCheerio'),
-                  onTap: () {
-                    setState(() {
-                      rule.enCheerio = !rule.enCheerio;
-                    });
-                  },
-                  onChange: (value) {
+                  onChanged: (value) {
                     setState(() {
                       rule.enCheerio = value;
                     });
@@ -314,9 +302,14 @@ class _RuleEditPageState extends State<RuleEditPage> {
           Card(
             child: Column(
               children: <Widget>[
-                OptionSwitch(
+                SwitchListTile(
                   value: rule.enMultiRoads,
                   title: Text('enMultiRoads'),
+                  onChanged: (value){
+                    setState(() {
+                     rule.enMultiRoads = value; 
+                    });
+                  },
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(14, 0, 14, 8),

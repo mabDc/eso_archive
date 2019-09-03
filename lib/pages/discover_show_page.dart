@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_liquidcore/liquidcore.dart';
 
 import '../utils/rule.dart';
+import '../utils/parser.dart';
 import '../ui/show_items.dart';
 import '../ui/show_error.dart';
 import '../ui/custom_list_tile.dart';
 import '../global/global.dart';
 import 'video_page.dart';
 import 'thumbnail_detail_page.dart';
-import '../utils/parser.dart';
 
 class DiscoverShowPage extends StatefulWidget {
   DiscoverShowPage({
@@ -35,11 +35,11 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
     super.initState();
     jsContext = JSContext();
   }
-  
+
   Future<bool> initJSContext() async {
     if (widget.rule.enCheerio) {
       String script =
-          await DefaultAssetBundle.of(context).loadString(Global().cheerioFile);
+          await DefaultAssetBundle.of(context).loadString(Global.cheerioFile);
       await jsContext.evaluateScript(script);
     }
     await jsContext.setProperty('host', widget.rule.host);
@@ -150,7 +150,10 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
                     }));
 
                 if (_item["type"] == 'customListTile') {
-                  return CustomListItem(itemJson: _item,onTap: onTap,);
+                  return CustomListItem(
+                    itemJson: _item,
+                    onTap: onTap,
+                  );
                 }
                 return Card(
                   child: ListTile(

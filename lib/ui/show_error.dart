@@ -12,7 +12,7 @@ class ShowError extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Theme.of(context).primaryColor.withOpacity(0.9),
-      child: Center(
+      child: Material(
         child: Column(
           children: <Widget>[
             Padding(padding: EdgeInsets.only(bottom: 30.0)),

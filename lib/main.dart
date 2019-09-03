@@ -9,7 +9,7 @@ import 'global/profile_change_notifier.dart';
 
 void main() => Global.init().then((e) {
       ErrorWidget.builder = (FlutterErrorDetails err) {
-        String errorMsg = err.toString() + '\n' + err.toString();
+        String errorMsg = err.toString();
         return ShowError(
           errorMsg: errorMsg,
         );

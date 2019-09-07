@@ -74,6 +74,12 @@ class ThumbnailExample {
         'enMultiRoads': false,
         'chapterUrl': '',
         'chapterItems': '''
+// default type listTile show as following
+// it\'s diffirent to other rule
+// leading;
+// title;
+// subtitle;
+// lock 
 (()=>{
   return JSON.parse(body).data
   .returnData.chapter_list.map((chapter,index)=>{

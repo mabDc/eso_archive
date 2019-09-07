@@ -10,10 +10,13 @@ class VideoExample {
 // host as 'http://www.zzzfun.com'
 // page as current page
 // url can be a string or map
-// map is like {url, headers, method, body}
-// headers is map, body can be string or list or map
+// map should be {url, headers, method, body}
+// headers is map, body can be string or map
+// default headers is win10/Chrome User-Agent
+
 `\${host}/vod-type-id-1-page-\${page}.html`''',
         'discoverItems': '''
+
 // you can use variable as following
 // host as 'http://www.zzzfun.com'
 // page as current page
@@ -72,6 +75,13 @@ class VideoExample {
 })();''',
         'detailUrl': '//item is lastest item rule executes result\nitem.href',
         'detailItems': '''
+
+// items can be string or List<item>
+// item is string or map or map with type
+// type can be thumbnail or default to listTile
+// like {type:'thumbnail',thumbnailUrl : url}
+// or {thumbnailUrl, title, subtitle, trailing}
+
 // because of holding on jscontext
 // you can use any used variables
 // like host page keyword url item and so on
@@ -89,6 +99,7 @@ class VideoExample {
         'enMultiRoads': true,
         'chapterUrl': '',
         'chapterItems': '''
+
 (()=>{
   var \$=cheerio.load(body);
   var \$episode = \$('.episode');

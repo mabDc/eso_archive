@@ -3,100 +3,20 @@ class Rule {
 
   int id = DateTime.now().microsecondsSinceEpoch;
   bool enable = true;
-  String name = 'rule templet';
+  String name = '';
   String host = '';
   String contentType = 'thumbnail';
   bool enCheerio = false;
-  String discoverUrl = '''
-// you can use variable as following
-// host as 'http://www.zzzfun.com'
-// page as current page
-// url can be a string or map
-// map should be {url, headers, method, body}
-// headers is map, body can be string or map
-// default headers is win10/Chrome User-Agent
-
-`\${host}/vod-type-id-1-page-\${page}.html`''';
-  String discoverItems = '''
-// default type listTile show as following
-// thumbnailUrl;
-// title;
-// subtitle;
-// trailing
-// {thumbnailUrl, title, subtitle, trailing}
-
-// another type customListTile show as following
-// thumbnailUrl;
-// title;
-// subtitle;
-// author;
-// publishDate;
-// readDuration;
-
-(() => {
-  // templet 1, json
-  var items = JSON.parse(body).items;
-  var templet1 = items.data.map(item=>{
-    var type = 'customListTile';
-    // url is a custom varible
-    var url = `\${host}/?id=\${item.id}`;
-    var thumbnailUrl = item.cover;
-    var title = item.name;
-    var subtitle = item.description;
-    var author = item.author;
-    var publishDate = item.passChapterNum;
-    var readDuration = item.tags.join(' ');
-    return {type, url, thumbnailUrl, title, subtitle, author, publishDate, readDuration};
-  });
-
-  // templet 2, html with cheerio
-  var templet2 = [];
-  var \$=cheerio.load(body);
-  \$('.search-result a').each((index,item) => {
-    var type = 'customListTile';
-    var url = `\${host}\${\$(item).attr('href')}`;
-    var thumbnailUrl = \$('img',item).attr('src');
-    var title = \$('.title-big',item).text();
-    var subtitle = \$('.d-descr',item).text().replace(/\\s/g,'');
-    var author = \$('.title-sub',item).text().replace(/\\s/g,'');
-    var publishDate = '';
-    var readDuration = '';
-    templet2.push({type, url, thumbnailUrl, title, subtitle, author, publishDate, readDuration});
-  });
-  return templet2;
-})();
-''';
-  String searchUrl = '// see discoverUrl';
-  String searchItems = '// see discoverItems';
-  String detailUrl = 'item.url';
-  String detailItems = '''
-// items can be string or List<item>
-// item is string or map or map with type
-// type can be thumbnail or default to listTile
-// like {type:'thumbnail',thumbnailUrl : url}
-// or {thumbnailUrl, title, subtitle, trailing}
-(()=>{
-  var items = [];
-
-  return items;
-})();
-''';
+  String discoverUrl = '';
+  String discoverItems = '';
+  String searchUrl = '';
+  String searchItems = '';
+  String detailUrl = '';
+  String detailItems = '';
   bool enMultiRoads = false;
-  String chapterUrl = 'item.url';
-  String chapterItems = '''
-// default type listTile show as following
-// it\'s diffirent to other rule
-// leading;
-// title;
-// subtitle;
-// lock 
-(()=>{
-  var items = [];
-
-  return items;
-})();
-''';
-  String contentUrl = 'item.url';
+  String chapterUrl = '';
+  String chapterItems = '';
+  String contentUrl = '';
   String contentItems = '';
 
   Rule.safeFromJson(Map<dynamic, dynamic> json) {

@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'color_lens_page.dart';
 import 'setting_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatefulWidget {
   @override
@@ -11,6 +10,15 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
+
+  void lanchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url, forceWebView: true);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,14 +91,14 @@ class _AboutPageState extends State<AboutPage> {
             child: ListTile(
               title: Text('open source'),
               subtitle: Text('https://github.com/mabDc/lizi'),
-              onTap: () => print('tap source'),
+              onTap: () => lanchUrl('https://github.com/mabDc/lizi'),
             ),
           ),
           Card(
             child: ListTile(
               title: Text('issues'),
               subtitle: Text('https://github.com/mabDc/lizi/issues'),
-              onTap: () => print('tap issues'),
+              onTap: () => lanchUrl('https://github.com/mabDc/lizi/issues'),
             ),
           ),
           Card(

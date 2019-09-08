@@ -4,9 +4,9 @@ import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import '../database/rule.dart';
 import '../ui/primary_color_text.dart';
-import '../ui/custom_list_tile.dart';
 import '../global/global.dart';
 import '../utils/parser.dart';
+import 'show_item.dart';
 
 class VideoPage extends StatefulWidget {
   VideoPage({
@@ -137,25 +137,28 @@ class _VideoPageState extends State<VideoPage>
   }
 
   void detailBuild(dynamic detailItems) {
-    dynamic item = widget.item;
-    title = '${item['title']}';
-    if (item["type"] == 'customListTile') {
-      info.add(CustomListItem(itemJson: item));
-    } else {
-      info.add(Card(
-        child: ListTile(
-          leading: Image.network('${item['thumbnailUrl']}'),
-          title: Text('${item['title']}'),
-          subtitle: Text(
-            '${item['subtitle']}',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          trailing: Text('${item['trailing']}'),
-          isThreeLine: true,
-        ),
-      ));
-    }
+    title = '${widget.item['title']}';
+    info.add(ShowItem(item: widget.item));
+    
+    // dynamic item = widget.item;
+    // title = '${item['title']}';
+    // if (item["type"] == 'customListTile') {
+    //   info.add(CustomListItem(itemJson: item));
+    // } else {
+    //   info.add(Card(
+    //     child: ListTile(
+    //       leading: Image.network('${item['thumbnailUrl']}'),
+    //       title: Text('${item['title']}'),
+    //       subtitle: Text(
+    //         '${item['subtitle']}',
+    //         maxLines: 2,
+    //         overflow: TextOverflow.ellipsis,
+    //       ),
+    //       trailing: Text('${item['trailing']}'),
+    //       isThreeLine: true,
+    //     ),
+    //   ));
+    // }
     // info.add(Divider());
 
     // if (detailItems is String) {

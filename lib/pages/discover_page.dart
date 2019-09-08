@@ -75,15 +75,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     leading: IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () async {
-                        lastDeleteRule = rule;
-                        await Global.ruleDao.deleteRule(lastDeleteRule);
+                        await Global.ruleDao.deleteRule(rule);
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text('deleted',),
                           action: SnackBarAction(
                             label: 'undo',
                             textColor: Theme.of(context).primaryColor,
                             onPressed: () async {
-                              await Global.ruleDao.insertOrUpdateRule(lastDeleteRule);
+                              await Global.ruleDao.insertOrUpdateRule(rule);
                               setState(() {});
                             },
                           ),

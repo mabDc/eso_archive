@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_liquidcore/liquidcore.dart';
 import '../database/rule.dart';
 import '../ui/primary_color_text.dart';
-import '../ui/custom_list_tile.dart';
 import '../ui/show_error.dart';
 import '../global/global.dart';
 import '../utils/parser.dart';
+import 'show_item.dart';
 class ThumbnailDetailPage extends StatefulWidget {
   ThumbnailDetailPage({
     @required this.rule,
@@ -59,25 +59,29 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
   }
 
   void detailBuild(dynamic detailItems) {
-    dynamic item = widget.item;
-    title = '${item['title']}';
-    if (item["type"] == 'customListTile') {
-      info.add(CustomListItem(itemJson: item));
-    } else {
-      info.add(Card(
-        child: ListTile(
-          leading: Image.network('${item['thumbnailUrl']}'),
-          title: Text('${item['title']}'),
-          subtitle: Text(
-            '${item['subtitle']}',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          trailing: Text('${item['trailing']}'),
-          isThreeLine: true,
-        ),
-      ));
-    }
+
+    title = '${widget.item['title']}';
+    info.add(ShowItem(item: widget.item));
+
+    // dynamic item = widget.item;
+    // title = '${item['title']}';
+    // if (item["type"] == 'customListTile') {
+    //   info.add(CustomListItem(itemJson: item));
+    // } else {
+    //   info.add(Card(
+    //     child: ListTile(
+    //       leading: Image.network('${item['thumbnailUrl']}'),
+    //       title: Text('${item['title']}'),
+    //       subtitle: Text(
+    //         '${item['subtitle']}',
+    //         maxLines: 2,
+    //         overflow: TextOverflow.ellipsis,
+    //       ),
+    //       trailing: Text('${item['trailing']}'),
+    //       isThreeLine: true,
+    //     ),
+    //   ));
+    // }
 
     if (detailItems is String) {
       detailItems = [detailItems];
@@ -130,7 +134,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
     List items = chapterItems as List;
     chapter.add(ListTile(
       title: PrimaryColorText('chapter'),
-      subtitle: PrimaryColorText('total ${items.length}'),
+      subtitle: PrimaryColorText('total ${items.length}', ),
     ));
     items.forEach((item) {
       final onTap = () async {

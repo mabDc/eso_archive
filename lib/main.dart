@@ -7,14 +7,10 @@ import 'global/global.dart';
 import 'ui/show_error.dart';
 import 'global/profile_change_notifier.dart';
 
-
 void main() => Global.init().then((e) async {
-      
       ErrorWidget.builder = (FlutterErrorDetails err) {
         String errorMsg = err.toString();
-        return ShowError(
-          errorMsg: errorMsg,
-        );
+        return ShowError(errorMsg: errorMsg);
       };
       runApp(MyApp());
       if (Platform.isAndroid) {

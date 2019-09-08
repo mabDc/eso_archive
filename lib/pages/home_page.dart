@@ -1,13 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'search_page.dart';
 import 'detail_page.dart';
+import 'show_item.dart';
 import '../database/shelf_item.dart';
-import '../database/rule.dart';
+import '../database/search_item.dart';
 import '../global/global.dart';
 import '../ui/show_error.dart';
-import '../ui/custom_list_tile.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,52 +14,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<ShelfItem> shelfItems;
-  List<Rule> rules;
-  Future<bool> initFuture;
 
-  Future<bool> init() async {
+  Future<bool> initItems() async {
     shelfItems = await Global.shelfItemDao.findAllShelfItems();
-    rules = await Global.ruleDao.findAllRules();
     return true;
-  }
-
-  Widget buildItem(ShelfItem shelfItem) {
-    final item = jsonDecode(shelfItem.itemJson);
-    final onTap = () => Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => DetailPage(
-              ruleID: shelfItem.ruleID,
-              item: item,
-            )));
-
-    if (item["type"] == 'customListTile') {
-      return Card(
-          child: CustomListItem(
-        itemJson: item,
-        onTap: onTap,
-      ));
-    }
-    return Card(
-      child: ListTile(
-        leading: item['thumbnailUrl'] == null
-            ? Container()
-            : Image.network('${item['thumbnailUrl']}'),
-        title: Text(item['title']?.toString() ?? ''),
-        subtitle: Text(
-          item['subtitle']?.toString() ?? '',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        trailing: Text(item['trailing']?.toString() ?? ''),
-        isThreeLine: true,
-        onTap: onTap,
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initFuture = init();
   }
 
   @override
@@ -78,7 +34,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: FutureBuilder(
-        future: initFuture,
+        future: initItems(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ShowError(
@@ -91,7 +47,35 @@ class _HomePageState extends State<HomePage> {
           return ListView.builder(
             itemCount: shelfItems.length,
             itemBuilder: (context, index) {
-              return buildItem(shelfItems[index]);
+              ShelfItem shelfItem = shelfItems[index];
+              SearchItem searchItem = SearchItem.fromShelfItem(shelfItem);
+              return ShowItem(
+                item: searchItem.item,
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DetailPage(
+                            searchItem: searchItem,
+                          )));
+                },
+                onLongPress: () async {
+                  await Global.shelfItemDao.deleteShelfItem(shelfItem);
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      'deleted',
+                    ),
+                    action: SnackBarAction(
+                      label: 'undo',
+                      textColor: Theme.of(context).primaryColor,
+                      onPressed: () async {
+                        await Global.shelfItemDao
+                            .insertOrUpdateShelfItem(shelfItem);
+                        setState(() {});
+                      },
+                    ),
+                  ));
+                  setState(() {});
+                },
+              );
             },
           );
         },

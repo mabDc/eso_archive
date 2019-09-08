@@ -59,13 +59,15 @@ class _$EsoDatabase extends EsoDatabase {
 
   RuleDao _ruleDaoInstance;
 
+  ShelfItemDao _shelfItemDaoInstance;
+
   Future<sqflite.Database> open(String name, List<Migration> migrations,
       [Callback callback]) async {
     final path = join(await sqflite.getDatabasesPath(), name);
 
     return sqflite.openDatabase(
       path,
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
       },
@@ -81,6 +83,8 @@ class _$EsoDatabase extends EsoDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Rule` (`id` INTEGER, `enable` INTEGER, `name` TEXT, `host` TEXT, `contentType` TEXT, `enCheerio` INTEGER, `discoverUrl` TEXT, `discoverItems` TEXT, `searchUrl` TEXT, `searchItems` TEXT, `detailUrl` TEXT, `detailItems` TEXT, `enMultiRoads` INTEGER, `chapterUrl` TEXT, `chapterItems` TEXT, `contentUrl` TEXT, `contentItems` TEXT, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ShelfItem` (`id` INTEGER, `ruleID` INTEGER, `itemJson` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -91,11 +95,16 @@ class _$EsoDatabase extends EsoDatabase {
   RuleDao get ruleDao {
     return _ruleDaoInstance ??= _$RuleDao(database, changeListener);
   }
+
+  @override
+  ShelfItemDao get shelfItemDao {
+    return _shelfItemDaoInstance ??= _$ShelfItemDao(database, changeListener);
+  }
 }
 
 class _$RuleDao extends RuleDao {
   _$RuleDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database, changeListener),
+      : _queryAdapter = QueryAdapter(database),
         _ruleInsertionAdapter = InsertionAdapter(
             database,
             'Rule',
@@ -117,32 +126,7 @@ class _$RuleDao extends RuleDao {
                   'chapterItems': item.chapterItems,
                   'contentUrl': item.contentUrl,
                   'contentItems': item.contentItems
-                },
-            changeListener),
-        _ruleUpdateAdapter = UpdateAdapter(
-            database,
-            'Rule',
-            ['id'],
-            (Rule item) => <String, dynamic>{
-                  'id': item.id,
-                  'enable': item.enable ? 1 : 0,
-                  'name': item.name,
-                  'host': item.host,
-                  'contentType': item.contentType,
-                  'enCheerio': item.enCheerio ? 1 : 0,
-                  'discoverUrl': item.discoverUrl,
-                  'discoverItems': item.discoverItems,
-                  'searchUrl': item.searchUrl,
-                  'searchItems': item.searchItems,
-                  'detailUrl': item.detailUrl,
-                  'detailItems': item.detailItems,
-                  'enMultiRoads': item.enMultiRoads ? 1 : 0,
-                  'chapterUrl': item.chapterUrl,
-                  'chapterItems': item.chapterItems,
-                  'contentUrl': item.contentUrl,
-                  'contentItems': item.contentItems
-                },
-            changeListener),
+                }),
         _ruleDeletionAdapter = DeletionAdapter(
             database,
             'Rule',
@@ -165,8 +149,7 @@ class _$RuleDao extends RuleDao {
                   'chapterItems': item.chapterItems,
                   'contentUrl': item.contentUrl,
                   'contentItems': item.contentItems
-                },
-            changeListener);
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -195,8 +178,6 @@ class _$RuleDao extends RuleDao {
 
   final InsertionAdapter<Rule> _ruleInsertionAdapter;
 
-  final UpdateAdapter<Rule> _ruleUpdateAdapter;
-
   final DeletionAdapter<Rule> _ruleDeletionAdapter;
 
   @override
@@ -211,29 +192,6 @@ class _$RuleDao extends RuleDao {
   }
 
   @override
-  Stream<List<Rule>> findAllRulesAsStream() {
-    return _queryAdapter.queryListStream('SELECT * FROM rule',
-        tableName: 'Rule', mapper: _ruleMapper);
-  }
-
-  @override
-  Future<void> deleteRuleById(int id) async {
-    await _queryAdapter.queryNoReturn('DELETE FROM rule WHERE id = ?',
-        arguments: <dynamic>[id]);
-  }
-
-  @override
-  Future<void> insertRule(Rule rule) async {
-    await _ruleInsertionAdapter.insert(rule, sqflite.ConflictAlgorithm.abort);
-  }
-
-  @override
-  Future<void> insertRules(List<Rule> rules) async {
-    await _ruleInsertionAdapter.insertList(
-        rules, sqflite.ConflictAlgorithm.abort);
-  }
-
-  @override
   Future<void> insertOrUpdateRule(Rule rule) async {
     await _ruleInsertionAdapter.insert(rule, sqflite.ConflictAlgorithm.replace);
   }
@@ -245,16 +203,6 @@ class _$RuleDao extends RuleDao {
   }
 
   @override
-  Future<void> updateRule(Rule rule) async {
-    await _ruleUpdateAdapter.update(rule, sqflite.ConflictAlgorithm.abort);
-  }
-
-  @override
-  Future<void> updateRules(List<Rule> rule) async {
-    await _ruleUpdateAdapter.updateList(rule, sqflite.ConflictAlgorithm.abort);
-  }
-
-  @override
   Future<void> deleteRule(Rule rule) async {
     await _ruleDeletionAdapter.delete(rule);
   }
@@ -262,5 +210,74 @@ class _$RuleDao extends RuleDao {
   @override
   Future<void> deleteRules(List<Rule> rules) async {
     await _ruleDeletionAdapter.deleteList(rules);
+  }
+}
+
+class _$ShelfItemDao extends ShelfItemDao {
+  _$ShelfItemDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _shelfItemInsertionAdapter = InsertionAdapter(
+            database,
+            'ShelfItem',
+            (ShelfItem item) => <String, dynamic>{
+                  'id': item.id,
+                  'ruleID': item.ruleID,
+                  'itemJson': item.itemJson
+                }),
+        _shelfItemDeletionAdapter = DeletionAdapter(
+            database,
+            'ShelfItem',
+            ['id'],
+            (ShelfItem item) => <String, dynamic>{
+                  'id': item.id,
+                  'ruleID': item.ruleID,
+                  'itemJson': item.itemJson
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _shelfItemMapper = (Map<String, dynamic> row) => ShelfItem(
+      row['id'] as int, row['ruleID'] as int, row['itemJson'] as String);
+
+  final InsertionAdapter<ShelfItem> _shelfItemInsertionAdapter;
+
+  final DeletionAdapter<ShelfItem> _shelfItemDeletionAdapter;
+
+  @override
+  Future<ShelfItem> findRuleById(int id) async {
+    return _queryAdapter.query('SELECT * FROM shelfitem WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _shelfItemMapper);
+  }
+
+  @override
+  Future<List<ShelfItem>> findAllShelfItems() async {
+    return _queryAdapter.queryList('SELECT * FROM shelfitem',
+        mapper: _shelfItemMapper);
+  }
+
+  @override
+  Future<void> insertOrUpdateShelfItem(ShelfItem shelfItem) async {
+    await _shelfItemInsertionAdapter.insert(
+        shelfItem, sqflite.ConflictAlgorithm.replace);
+  }
+
+  @override
+  Future<void> insertOrUpdateShelfItems(List<ShelfItem> shelfItems) async {
+    await _shelfItemInsertionAdapter.insertList(
+        shelfItems, sqflite.ConflictAlgorithm.replace);
+  }
+
+  @override
+  Future<void> deleteShelfItem(ShelfItem shelfItem) async {
+    await _shelfItemDeletionAdapter.delete(shelfItem);
+  }
+
+  @override
+  Future<void> deleteShelfItems(List<ShelfItem> shelfItems) async {
+    await _shelfItemDeletionAdapter.deleteList(shelfItems);
   }
 }

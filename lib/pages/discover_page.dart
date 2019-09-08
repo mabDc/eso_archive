@@ -83,7 +83,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                             label: 'undo',
                             textColor: Theme.of(context).primaryColor,
                             onPressed: () async {
-                              await Global.ruleDao.insertRule(lastDeleteRule);
+                              await Global.ruleDao.insertOrUpdateRule(lastDeleteRule);
                               setState(() {});
                             },
                           ),

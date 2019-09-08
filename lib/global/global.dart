@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../database/database.dart';
 import '../database/rule_dao.dart';
+import '../database/shelf_item_dao.dart';
 import 'profile.dart';
 
 class Global {
@@ -13,6 +14,8 @@ class Global {
 
   static RuleDao _ruleDao;
   static RuleDao get ruleDao => _ruleDao;
+  static ShelfItemDao _shelfItemDao;
+  static ShelfItemDao get shelfItemDao => _shelfItemDao;
 
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -27,7 +30,7 @@ class Global {
     final _database =
         await $FloorEsoDatabase.databaseBuilder('eso_database.db').build();
     _ruleDao = _database.ruleDao;
-
+    _shelfItemDao = _database.shelfItemDao;
   }
 
   static Future<bool> saveProfile() =>

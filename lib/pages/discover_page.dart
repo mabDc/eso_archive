@@ -12,6 +12,7 @@ class DiscoverPage extends StatefulWidget {
 
 class _DiscoverPageState extends State<DiscoverPage> {
   List<Rule> rules;
+  Rule lastDeleteRule;
 
   Future<bool> findAllRules() async {
     rules = await Global.ruleDao.findAllRules();
@@ -74,7 +75,19 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     leading: IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () async {
-                        await Global.ruleDao.deleteRuleById(rule.id);
+                        lastDeleteRule = rule;
+                        await Global.ruleDao.deleteRule(lastDeleteRule);
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('deleted',),
+                          action: SnackBarAction(
+                            label: 'undo',
+                            textColor: Theme.of(context).primaryColor,
+                            onPressed: () async {
+                              await Global.ruleDao.insertRule(lastDeleteRule);
+                              setState(() {});
+                            },
+                          ),
+                        ));
                         setState(() {});
                       },
                     ),

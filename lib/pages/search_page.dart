@@ -1,11 +1,12 @@
 import 'package:flutter_liquidcore/liquidcore.dart';
 import 'package:flutter/material.dart';
 import '../database/rule.dart';
-import '../rule/thumbnail_example.dart';
-import '../rule/video_example.dart';
 import '../global/global.dart';
 import '../utils/parser.dart';
 import '../ui/show_error.dart';
+import '../ui/custom_list_tile.dart';
+import 'video_page.dart';
+import 'thumbnail_detail_page.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -36,7 +37,8 @@ class _SearchPageState extends State<SearchPage> {
   Future<bool> initJSContext() async {
     // 从数据库获取所有图源形成数组
     rules = await Global.ruleDao.findAllRules();
-    rules = rules.where((rule)=>rule.enable).toList();
+    rules = rules.where((rule) => rule.enable).toList();
+    if (rules.length == 0) return false;
 
     String script =
         await DefaultAssetBundle.of(context).loadString(Global.cheerioFile);
@@ -54,6 +56,7 @@ class _SearchPageState extends State<SearchPage> {
   Future search() async {
     setState(() {
       items.clear();
+      nextPage = 0;
     });
     String key = textController.text.trim();
     for (var jsContext in jsContextArray) {
@@ -65,26 +68,78 @@ class _SearchPageState extends State<SearchPage> {
   Future loadMore() async {
     nextPage++;
     for (var i = 0; i < rules.length; i++) {
-      (() async {
+      ((int i) async {
         Rule rule = rules[i];
         JSContext jsContext = jsContextArray[i];
         await jsContext.setProperty('page', nextPage);
         dynamic url = await jsContext.evaluateScript(rule.searchUrl);
+        if(url == null) return;
         await jsContext.setProperty('url', url);
         final response = await Parser().urlParser(url);
         await jsContext.setProperty('body', response.body);
         List _items = await jsContext.evaluateScript(rule.searchItems);
+        _items.forEach((item) => item["index"] = i);
         setState(() {
           items.addAll(_items);
         });
-      })();
+      })(i);
     }
   }
 
-  Widget buildItem(dynamic item,int index) {
+  Widget buildItem(dynamic item) {
+    final index = item["index"];
+    final rule = rules[index];
+    final jsContext = jsContextArray[index];
+    final onTap =
+        () => Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              switch (rule.contentType) {
+                case 'video':
+                  return VideoPage(
+                    rule: rule,
+                    item: item,
+                    jsContext: jsContext,
+                  );
+                  break;
+                case 'thumbnail':
+                  return ThumbnailDetailPage(
+                    rule: rule,
+                    item: item,
+                    jsContext: jsContext,
+                  );
+                default:
+                  return Scaffold(
+                    appBar: AppBar(
+                      title: Text('contentType error'),
+                    ),
+                    body: ShowError(
+                      errorMsg:
+                          'undefined contentType of ${rule.contentType} in rule ${rule.name}',
+                    ),
+                  );
+              }
+            }));
+
+    if (item["type"] == 'customListTile') {
+      return Card(
+          child: CustomListItem(
+        itemJson: item,
+        onTap: onTap,
+      ));
+    }
     return Card(
       child: ListTile(
-        title: Text(item.toString()),
+        leading: item['thumbnailUrl'] == null
+            ? Container()
+            : Image.network('${item['thumbnailUrl']}'),
+        title: Text(item['title']?.toString() ?? ''),
+        subtitle: Text(
+          item['subtitle']?.toString() ?? '',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: Text(item['trailing']?.toString() ?? ''),
+        isThreeLine: true,
+        onTap: onTap,
       ),
     );
   }
@@ -115,8 +170,13 @@ class _SearchPageState extends State<SearchPage> {
               errorMsg: snapshot.error,
             );
           }
-          if (!snapshot.hasData || !snapshot.data) {
+          if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.data) {
+            return Center(
+              child: Text('none enable source',style: TextStyle(color: Colors.red,fontSize: 30,fontStyle: FontStyle.italic),),
+            );
           }
           return ListView.builder(
             itemCount: items.length + 1,
@@ -127,8 +187,7 @@ class _SearchPageState extends State<SearchPage> {
                 }
                 return Center(child: CircularProgressIndicator());
               } else {
-                final item = items[index];
-                return buildItem(item, index-1);
+                return buildItem(items[index]);
               }
             },
             controller: scrollController,

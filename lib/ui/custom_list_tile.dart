@@ -109,7 +109,7 @@ class CustomListItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.fromLTRB(0,10.0,10.0,10.0),
         child: SizedBox(
           height: 100,
           child: Row(
@@ -122,17 +122,14 @@ class CustomListItem extends StatelessWidget {
                     : Image.network(item.thumbnailUrl),
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
-                  child: _ArticleDescription(
+                child: _ArticleDescription(
                     title: item.title,
                     subtitle: item.subtitle,
                     author: item.author,
                     publishDate: item.publishDate,
                     readDuration: item.readDuration,
                   ),
-                ),
-              )
+              ),
             ],
           ),
         ),

@@ -75,8 +75,8 @@ class _ColorLensPageState extends State<ColorLensPage> {
                       ? Row(
                           children: <Widget>[
                             Container(
-                              width: 80,
-                              padding: EdgeInsets.only(right: 20),
+                              width: 60,
+                              padding: EdgeInsets.only(right: 16),
                               child: TextField(
                                 controller: r,
                                 keyboardType: TextInputType.number,
@@ -85,8 +85,8 @@ class _ColorLensPageState extends State<ColorLensPage> {
                               ),
                             ),
                             Container(
-                              width: 80,
-                              padding: EdgeInsets.only(right: 20),
+                              width: 60,
+                              padding: EdgeInsets.only(right: 16),
                               child: TextField(
                                 controller: g,
                                 keyboardType: TextInputType.number,
@@ -96,8 +96,8 @@ class _ColorLensPageState extends State<ColorLensPage> {
                               ),
                             ),
                             Container(
-                              width: 80,
-                              padding: EdgeInsets.only(right: 20),
+                              width: 60,
+                              padding: EdgeInsets.only(right: 16),
                               child: TextField(
                                 controller: b,
                                 keyboardType: TextInputType.number,

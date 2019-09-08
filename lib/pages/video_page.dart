@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_liquidcore/liquidcore.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
-import '../utils/rule.dart';
+import '../database/rule.dart';
 import '../ui/primary_color_text.dart';
 import '../ui/custom_list_tile.dart';
 import '../global/global.dart';

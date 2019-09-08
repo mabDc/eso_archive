@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../utils/rule.dart';
+import '../database/rule.dart';
 import '../ui/primary_color_text.dart';
+import '../global/global.dart';
 
 class RuleEditPage extends StatefulWidget {
   RuleEditPage({
@@ -35,7 +36,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
 
   @override
   void initState() {
-    rule = widget.rule ?? Rule();
+    rule = widget.rule ?? Rule.newRule();
     super.initState();
   }
 
@@ -48,10 +49,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
           IconButton(
             icon: Icon(Icons.save),
             onPressed: () async {
-              // Map<String, dynamic> map = Map<String, dynamic>();
-              // map.addAll({rule.id.toString(): rule.toJson()});
-              // Global().rule.addAll(map);
-              // await Global().saveRule();
+              await Global.ruleDao.insertOrUpdateRule(rule);
             },
           ),
           IconButton(
@@ -131,24 +129,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     );
                   }).toList(),
                 ),
-                // Padding(
-                //   padding: EdgeInsets.fromLTRB(14, 0, 14, 8),
-                //   child: TextField(
-                //     controller: TextEditingController(text: rule.contentType),
-                //     minLines: 1,
-                //     maxLines: null,
-                //     decoration: InputDecoration(
-                //       labelText: 'contentType',
-                //     ),
-                //     onChanged: (text) {
-                //       rule.contentType = text;
-                //     },
-                //   ),
-                // ),
-
-                //_buildTextField(, 'name'),
-                //_buildTextField(rule.host, 'host'),
-                //_buildTextField(rule.contentType, 'contentType'),
+                
               ],
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_liquidcore/liquidcore.dart';
 
-import '../utils/rule.dart';
+import '../database/rule.dart';
 import '../utils/parser.dart';
 import '../ui/show_items.dart';
 import '../ui/show_error.dart';
@@ -150,10 +150,11 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
                     }));
 
                 if (_item["type"] == 'customListTile') {
-                  return CustomListItem(
+                  return Card(
+                  child:CustomListItem(
                     itemJson: _item,
                     onTap: onTap,
-                  );
+                  ));
                 }
                 return Card(
                   child: ListTile(

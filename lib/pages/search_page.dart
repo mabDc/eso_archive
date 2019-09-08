@@ -1,6 +1,6 @@
 import 'package:flutter_liquidcore/liquidcore.dart';
 import 'package:flutter/material.dart';
-import '../utils/rule.dart';
+import '../database/rule.dart';
 import '../rule/thumbnail_example.dart';
 import '../rule/video_example.dart';
 import '../global/global.dart';
@@ -34,11 +34,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<bool> initJSContext() async {
-    // 数据库获取所有图源形成数组
-    rules = [
-      Rule.safeFromJson(VideoExample().rule),
-      Rule.safeFromJson(ThumbnailExample().rule)
-    ];
+    // 从数据库获取所有图源形成数组
+    rules = await Global.ruleDao.findAllRules();
+    rules = rules.where((rule)=>rule.enable).toList();
+
     String script =
         await DefaultAssetBundle.of(context).loadString(Global.cheerioFile);
     for (var rule in rules) {
@@ -82,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Widget buildItem(dynamic item) {
+  Widget buildItem(dynamic item,int index) {
     return Card(
       child: ListTile(
         title: Text(item.toString()),
@@ -129,7 +128,7 @@ class _SearchPageState extends State<SearchPage> {
                 return Center(child: CircularProgressIndicator());
               } else {
                 final item = items[index];
-                return buildItem(item);
+                return buildItem(item, index-1);
               }
             },
             controller: scrollController,

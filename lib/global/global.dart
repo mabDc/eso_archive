@@ -1,6 +1,9 @@
 import 'dart:convert';
-import 'profile.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import '../database/database.dart';
+import '../database/rule_dao.dart';
+import 'profile.dart';
 
 class Global {
   static SharedPreferences _prefs;
@@ -8,9 +11,12 @@ class Global {
   static const cheerioFile = 'lib/js/cheerio.js';
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
 
+  static RuleDao _ruleDao;
+  static RuleDao get ruleDao => _ruleDao;
+
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
-    var _profile = _prefs.getString("profile");
+    String _profile = _prefs.getString("profile");
     if (_profile != null) {
       try {
         profile = Profile.safeFromJson(jsonDecode(_profile));
@@ -18,6 +24,10 @@ class Global {
         print(e);
       }
     }
+    final _database =
+        await $FloorEsoDatabase.databaseBuilder('eso_database.db').build();
+    _ruleDao = _database.ruleDao;
+
   }
 
   static Future<bool> saveProfile() =>

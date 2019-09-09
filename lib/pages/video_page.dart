@@ -27,8 +27,8 @@ class _VideoPageState extends State<VideoPage>
   JSContext jsContext;
   Future<bool> initFuture;
 
-  List<Widget> chapter;
-  List<Widget> info;
+  List<Widget> chapter = <Widget>[];
+  List<Widget> info = <Widget>[];
   String title;
   String url;
   String ruleContentURL;
@@ -56,6 +56,7 @@ class _VideoPageState extends State<VideoPage>
           await DefaultAssetBundle.of(context).loadString(Global.cheerioFile);
       await jsContext.evaluateScript(script);
     }
+    await jsContext.setProperty('host', rule.host);
     await jsContext.setProperty('item', widget.searchItem.item);
     if (rule.detailUrl != null && rule.detailUrl.trim() != '') {
       final url = await jsContext.evaluateScript(rule.detailUrl);
@@ -77,17 +78,8 @@ class _VideoPageState extends State<VideoPage>
     return true;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (url != null) {
-      if (videoPlayerController == null) {
-        videoPlayerController = VideoPlayerController.network(url);
-      } else if (videoPlayerController.dataSource != url) {
-        videoPlayerController.dispose();
-        videoPlayerController = VideoPlayerController.network(url);
-      }
-    }
-    final body = Column(
+  Widget buildBody(){
+    return Column(
       children: <Widget>[
         url == null
             ? Container(
@@ -131,7 +123,10 @@ class _VideoPageState extends State<VideoPage>
         ),
       ],
     );
-    final floatingActionButton = FloatingActionButton(
+  }
+
+  Widget buildFloatingButton(){
+    return FloatingActionButton(
       child: isInShelf
           ? Icon(Icons.favorite)
           : Icon(Icons.favorite_border),
@@ -149,6 +144,17 @@ class _VideoPageState extends State<VideoPage>
         });
       },
     );
+  }
+  @override
+  Widget build(BuildContext context) {
+    if (url != null) {
+      if (videoPlayerController == null) {
+        videoPlayerController = VideoPlayerController.network(url);
+      } else if (videoPlayerController.dataSource != url) {
+        videoPlayerController.dispose();
+        videoPlayerController = VideoPlayerController.network(url);
+      }
+    }
     return FutureBuilder<bool>(
         future: init(),
         builder: (context, snapshot) {
@@ -162,13 +168,13 @@ class _VideoPageState extends State<VideoPage>
           }
           return Global.profile.enFullScreen
               ? Scaffold(
-                  body: body,
-                  floatingActionButton: floatingActionButton,
+                  body: buildBody() ,
+                  floatingActionButton: buildFloatingButton(),
                 )
               : Scaffold(
                   appBar: AppBar(title: Text(title)),
-                  body: body,
-                  floatingActionButton: floatingActionButton,
+                  body: buildBody(),
+                  floatingActionButton: buildFloatingButton(),
                 );
         });
   }

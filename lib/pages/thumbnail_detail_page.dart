@@ -46,6 +46,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
           await DefaultAssetBundle.of(context).loadString(Global.cheerioFile);
       await jsContext.evaluateScript(script);
     }
+    await jsContext.setProperty('host', rule.host);
     await jsContext.setProperty('item', widget.searchItem.item);
     if (rule.detailUrl != null && rule.detailUrl.trim() != '') {
       final url = await jsContext.evaluateScript(rule.detailUrl);

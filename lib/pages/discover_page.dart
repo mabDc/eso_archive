@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../database/rule.dart';
 import 'rule_edit_page.dart';
 import 'discover_show_page.dart';
-import '../ui/show_error.dart';
+import 'show_error.dart';
 import '../global/global.dart';
 
 class DiscoverPage extends StatefulWidget {
@@ -13,6 +13,7 @@ class DiscoverPage extends StatefulWidget {
 class _DiscoverPageState extends State<DiscoverPage> {
   List<Rule> rules;
   Rule lastDeleteRule;
+  bool enEdit = false;
 
   Future<bool> findAllRules() async {
     rules = await Global.ruleDao.findAllRules();
@@ -24,12 +25,16 @@ class _DiscoverPageState extends State<DiscoverPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('discover'),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: Icon(Icons.search),
-        //     onPressed: () => print('search'),
-        //   ),
-        // ],
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              setState(() {
+                enEdit = !enEdit;
+              });
+            },
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: findAllRules(),
@@ -71,38 +76,53 @@ class _DiscoverPageState extends State<DiscoverPage> {
               } else {
                 Rule rule = rules[index];
                 return Card(
-                  child: ListTile(
-                    leading: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () async {
-                        await Global.ruleDao.deleteRule(rule);
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('deleted',),
-                          action: SnackBarAction(
-                            label: 'undo',
-                            textColor: Theme.of(context).primaryColor,
+                  child: enEdit
+                      ? ListTile(
+                          leading: IconButton(
+                            icon: Icon(Icons.delete),
                             onPressed: () async {
-                              await Global.ruleDao.insertOrUpdateRule(rule);
+                              await Global.ruleDao.deleteRule(rule);
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                  'deleted',
+                                ),
+                                action: SnackBarAction(
+                                  label: 'undo',
+                                  textColor: Theme.of(context).primaryColor,
+                                  onPressed: () async {
+                                    await Global.ruleDao
+                                        .insertOrUpdateRule(rule);
+                                    setState(() {});
+                                  },
+                                ),
+                              ));
                               setState(() {});
                             },
                           ),
-                        ));
-                        setState(() {});
-                      },
-                    ),
-                    title: Text(rule.name),
-                    subtitle: Text(rule.host),
-                    trailing: IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => RuleEditPage(rule: rule))),
-                    ),
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => DiscoverShowPage(
-                              rule: rule,
-                            ))),
-                  ),
+                          title: Text(rule.name),
+                          subtitle: Text(rule.host),
+                          trailing: IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        RuleEditPage(rule: rule))),
+                          ),
+                          onTap: () =>
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DiscoverShowPage(
+                                        rule: rule,
+                                      ))),
+                        )
+                      : ListTile(
+                          title: Text(rule.name),
+                          subtitle: Text(rule.host),
+                          onTap: () =>
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DiscoverShowPage(
+                                        rule: rule,
+                                      ))),
+                        ),
                 );
               }
             },

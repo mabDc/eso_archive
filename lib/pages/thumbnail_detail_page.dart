@@ -1,91 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_liquidcore/liquidcore.dart';
 import '../database/rule.dart';
-import '../ui/primary_color_text.dart';
-import '../ui/show_error.dart';
+import 'show_error.dart';
 import '../global/global.dart';
 import '../utils/parser.dart';
 import 'show_item.dart';
+import '../database/search_item.dart';
+
 class ThumbnailDetailPage extends StatefulWidget {
   ThumbnailDetailPage({
-    @required this.rule,
-    @required this.item,
-    @required this.jsContext,
+    @required this.searchItem,
     Key key,
   }) : super(key: key);
-  final Rule rule;
-  final dynamic item;
-  final JSContext jsContext;
+
+  final SearchItem searchItem;
   @override
   _ThumbnailDetailPageState createState() => _ThumbnailDetailPageState();
 }
 
 class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
-  
   final List<Widget> chapter = <Widget>[];
   final List<Widget> info = <Widget>[];
   String title = '';
   String url;
-  bool notFirst = false;
+  Future<bool> initFuture;
+  JSContext jsContext;
+  Rule rule;
+  bool isInShelf;
 
-  Future<bool> initPage() async {
-    if (notFirst) {
-      return true;
-    } else {
-      notFirst = true;
+  @override
+  void initState() {
+    super.initState();
+    title = widget.searchItem.item['title']?.toString() ?? '';
+    jsContext = JSContext();
+    initFuture = init();
+  }
+
+  Future<bool> init() async {
+    rule = await Global.ruleDao.findRuleById(widget.searchItem.ruleID);
+    final shelfItem = await Global.shelfItemDao
+        .findShelfItemById(widget.searchItem.shelfItem.id);
+    isInShelf = shelfItem != null;
+    if (rule.enCheerio) {
+      String script =
+          await DefaultAssetBundle.of(context).loadString(Global.cheerioFile);
+      await jsContext.evaluateScript(script);
     }
-    final jsContext = widget.jsContext;
-    await jsContext.setProperty('item', widget.item);
-    if (widget.rule.detailUrl != null && widget.rule.detailUrl.trim() != '') {
-      final url = await jsContext.evaluateScript(widget.rule.detailUrl);
+    await jsContext.setProperty('item', widget.searchItem.item);
+    if (rule.detailUrl != null && rule.detailUrl.trim() != '') {
+      final url = await jsContext.evaluateScript(rule.detailUrl);
       await jsContext.setProperty('url', url);
       final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
     }
-    dynamic detailItems =
-        await jsContext.evaluateScript(widget.rule.detailItems);
+    dynamic detailItems = await jsContext.evaluateScript(rule.detailItems);
     detailBuild(detailItems);
 
-    if (widget.rule.chapterUrl != null && widget.rule.chapterUrl.trim() != '') {
-      final url = await jsContext.evaluateScript(widget.rule.chapterUrl);
+    if (rule.chapterUrl != null && rule.chapterUrl.trim() != '') {
+      final url = await jsContext.evaluateScript(rule.chapterUrl);
       await jsContext.setProperty('url', url);
       final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
     }
-    dynamic chapterItems =
-        await jsContext.evaluateScript(widget.rule.chapterItems);
+    dynamic chapterItems = await jsContext.evaluateScript(rule.chapterItems);
     chapterBuild(chapterItems);
     return true;
   }
 
   void detailBuild(dynamic detailItems) {
-
-    title = '${widget.item['title']}';
-    info.add(ShowItem(item: widget.item));
-
-    // dynamic item = widget.item;
-    // title = '${item['title']}';
-    // if (item["type"] == 'customListTile') {
-    //   info.add(CustomListItem(itemJson: item));
-    // } else {
-    //   info.add(Card(
-    //     child: ListTile(
-    //       leading: Image.network('${item['thumbnailUrl']}'),
-    //       title: Text('${item['title']}'),
-    //       subtitle: Text(
-    //         '${item['subtitle']}',
-    //         maxLines: 2,
-    //         overflow: TextOverflow.ellipsis,
-    //       ),
-    //       trailing: Text('${item['trailing']}'),
-    //       isThreeLine: true,
-    //     ),
-    //   ));
-    // }
+    info.add(ShowItem(item: widget.searchItem.item));
 
     if (detailItems is String) {
       detailItems = [detailItems];
     }
+
     detailItems.forEach((item) {
       if (item is String) {
         info.add(Card(
@@ -119,37 +107,39 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
   }
 
   void chapterBuild(dynamic chapterItems) {
-    if (widget.rule.enMultiRoads) {
+    if (rule.enMultiRoads) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => Scaffold(
                 appBar: AppBar(
                   title: Text('enMultiRoads error'),
                 ),
                 body: ShowError(
-                  errorMsg: 'enMultiRoads not yet in rule ${widget.rule.name}',
+                  errorMsg: 'enMultiRoads not yet in rule ${rule.name}',
                 ),
               )));
       return;
     }
     List items = chapterItems as List;
     chapter.add(ListTile(
-      title: PrimaryColorText('chapter'),
-      subtitle: PrimaryColorText('total ${items.length}', ),
+      title: Text(
+        'chapter',
+        style: TextStyle(color: Theme.of(context).primaryColor),
+      ),
+      subtitle: Text(
+        'total ${items.length}',
+        style: TextStyle(color: Theme.of(context).primaryColor),
+      ),
     ));
     items.forEach((item) {
       final onTap = () async {
-        await widget.jsContext.setProperty('item', item);
-
-        if (widget.rule.contentUrl != null &&
-            widget.rule.contentUrl.trim() != '') {
-          final url =
-              await widget.jsContext.evaluateScript(widget.rule.contentUrl);
-          await widget.jsContext.setProperty('url', url);
+        await jsContext.setProperty('item', item);
+        if (rule.contentUrl != null && rule.contentUrl.trim() != '') {
+          final url = await jsContext.evaluateScript(rule.contentUrl);
+          await jsContext.setProperty('url', url);
           final response = await Parser().urlParser(url);
-          await widget.jsContext.setProperty('body', response.body);
+          await jsContext.setProperty('body', response.body);
         }
-        dynamic detailItems =
-            await widget.jsContext.evaluateScript(widget.rule.contentItems);
+        dynamic detailItems = await jsContext.evaluateScript(rule.contentItems);
         List items = detailItems;
         return Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           final body = ListView.builder(
@@ -201,39 +191,51 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
   }
 
   @override
-  void initState() {
-    title = widget.item['title']?.toString() ?? '';
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: FutureBuilder<bool>(
-          future: initPage(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return ShowError(
-                errorMsg: snapshot.error,
-              );
-            }
-            if (!snapshot.hasData || !snapshot.data) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return ListView.builder(
-              itemCount: info.length + chapter.length,
-              itemBuilder: (context, index) {
-                if (index < info.length) {
-                  return info[index];
-                } else {
-                  return chapter[index - info.length];
-                }
-              },
-            );
-          }),
+    return FutureBuilder<bool>(
+      future: initFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return ShowError(
+            errorMsg: snapshot.error,
+          );
+        }
+        if (!snapshot.hasData || !snapshot.data) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child:
+                isInShelf ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+            tooltip: 'add to shelf',
+            onPressed: () async {
+              if (isInShelf) {
+                await Global.shelfItemDao
+                    .deleteShelfItem(widget.searchItem.shelfItem);
+              } else {
+                await Global.shelfItemDao
+                    .insertOrUpdateShelfItem(widget.searchItem.shelfItem);
+              }
+              setState(() {
+                isInShelf = !isInShelf;
+              });
+            },
+          ),
+          body: ListView.builder(
+            itemCount: info.length + chapter.length,
+            itemBuilder: (context, index) {
+              if (index < info.length) {
+                return info[index];
+              } else {
+                return chapter[index - info.length];
+              }
+            },
+          ),
+        );
+      },
     );
   }
 }

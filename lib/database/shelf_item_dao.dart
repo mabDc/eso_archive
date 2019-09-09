@@ -4,7 +4,7 @@ import 'package:floor/floor.dart';
 @dao
 abstract class ShelfItemDao {
   @Query('SELECT * FROM shelfitem WHERE id = :id')
-  Future<ShelfItem> findRuleById(int id);
+  Future<ShelfItem> findShelfItemById(int id);
 
   @Query('SELECT * FROM shelfitem')
   Future<List<ShelfItem>> findAllShelfItems();

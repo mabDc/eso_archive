@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../database/rule.dart';
 import '../global/global.dart';
 import '../utils/parser.dart';
-import '../ui/show_error.dart';
+import 'show_error.dart';
 import 'detail_page.dart';
 import 'show_item.dart';
 import '../database/search_item.dart';
@@ -81,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
         List items = await jsContext.evaluateScript(rule.searchItems);
         setState(() {
           searchItems.addAll(
-              items.map((item) => SearchItem(ruleID: rule.id, item: item)));
+              items.map((item) => SearchItem(ruleID: rule.id, item: item, contentType: rule.contentType)));
         });
       })(i);
     }
@@ -148,8 +148,8 @@ class _SearchPageState extends State<SearchPage> {
                 return ShowItem(
                   item: searchItem.item,
                   onTap: () async {
-                    await Global.shelfItemDao
-                        .insertOrUpdateShelfItem(searchItem.shelfItem);
+                    // await Global.shelfItemDao
+                    //     .insertOrUpdateShelfItem(searchItem.shelfItem);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => DetailPage(
                               searchItem: searchItem,
@@ -177,63 +177,4 @@ class _SearchPageState extends State<SearchPage> {
 
     super.dispose();
   }
-
-  // Widget buildItem(dynamic item) {
-  //   final index = item["index"];
-  //   final rule = rules[index];
-  //   final jsContext = jsContextArray[index];
-  //   final onTap =
-  //       () => Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-  //             switch (rule.contentType) {
-  //               case 'video':
-  //                 return VideoPage(
-  //                   rule: rule,
-  //                   item: item,
-  //                   jsContext: jsContext,
-  //                 );
-  //                 break;
-  //               case 'thumbnail':
-  //                 return ThumbnailDetailPage(
-  //                   rule: rule,
-  //                   item: item,
-  //                   jsContext: jsContext,
-  //                 );
-  //               default:
-  //                 return Scaffold(
-  //                   appBar: AppBar(
-  //                     title: Text('contentType error'),
-  //                   ),
-  //                   body: ShowError(
-  //                     errorMsg:
-  //                         'undefined contentType of ${rule.contentType} in rule ${rule.name}',
-  //                   ),
-  //                 );
-  //             }
-  //           }));
-
-  //   if (item["type"] == 'customListTile') {
-  //     return Card(
-  //         child: CustomListItem(
-  //       itemJson: item,
-  //       onTap: onTap,
-  //     ));
-  //   }
-  //   return Card(
-  //     child: ListTile(
-  //       leading: item['thumbnailUrl'] == null
-  //           ? Container()
-  //           : Image.network('${item['thumbnailUrl']}'),
-  //       title: Text(item['title']?.toString() ?? ''),
-  //       subtitle: Text(
-  //         item['subtitle']?.toString() ?? '',
-  //         maxLines: 2,
-  //         overflow: TextOverflow.ellipsis,
-  //       ),
-  //       trailing: Text(item['trailing']?.toString() ?? ''),
-  //       isThreeLine: true,
-  //       onTap: onTap,
-  //     ),
-  //   );
-  // }
-
 }

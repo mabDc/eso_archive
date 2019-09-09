@@ -5,7 +5,7 @@ import 'show_item.dart';
 import '../database/shelf_item.dart';
 import '../database/search_item.dart';
 import '../global/global.dart';
-import '../ui/show_error.dart';
+import 'show_error.dart';
 
 class HomePage extends StatefulWidget {
   @override

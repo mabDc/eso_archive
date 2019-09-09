@@ -5,9 +5,10 @@ class ShelfItem {
   @primaryKey
   int id;
   int ruleID;
+  String contentType;
   String itemJson;
 
-  ShelfItem(this.id, this.ruleID, this.itemJson);
+  ShelfItem(this.id, this.ruleID, this.contentType,this.itemJson);
 
   // ShelfItem.newItem(this.ruleID, dynamic item) {
   //   id = DateTime.now().microsecondsSinceEpoch;

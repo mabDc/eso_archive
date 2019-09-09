@@ -10,7 +10,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 
 part 'database.g.dart';
 
-@Database(version: 2, entities: [Rule, ShelfItem])
+@Database(version: 3, entities: [Rule, ShelfItem])
 abstract class EsoDatabase extends FloorDatabase {
   RuleDao get ruleDao;
   ShelfItemDao get shelfItemDao;

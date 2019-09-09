@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'pages/navigation_page.dart';
 import 'global/global.dart';
-import 'ui/show_error.dart';
+import 'pages/show_error.dart';
 import 'global/profile_change_notifier.dart';
 
 void main() => Global.init().then((e) async {

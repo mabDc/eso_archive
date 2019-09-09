@@ -67,7 +67,7 @@ class _$EsoDatabase extends EsoDatabase {
 
     return sqflite.openDatabase(
       path,
-      version: 2,
+      version: 3,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
       },
@@ -84,7 +84,7 @@ class _$EsoDatabase extends EsoDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Rule` (`id` INTEGER, `enable` INTEGER, `name` TEXT, `host` TEXT, `contentType` TEXT, `enCheerio` INTEGER, `discoverUrl` TEXT, `discoverItems` TEXT, `searchUrl` TEXT, `searchItems` TEXT, `detailUrl` TEXT, `detailItems` TEXT, `enMultiRoads` INTEGER, `chapterUrl` TEXT, `chapterItems` TEXT, `contentUrl` TEXT, `contentItems` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `ShelfItem` (`id` INTEGER, `ruleID` INTEGER, `itemJson` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `ShelfItem` (`id` INTEGER, `ruleID` INTEGER, `contentType` TEXT, `itemJson` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -222,6 +222,7 @@ class _$ShelfItemDao extends ShelfItemDao {
             (ShelfItem item) => <String, dynamic>{
                   'id': item.id,
                   'ruleID': item.ruleID,
+                  'contentType': item.contentType,
                   'itemJson': item.itemJson
                 }),
         _shelfItemDeletionAdapter = DeletionAdapter(
@@ -231,6 +232,7 @@ class _$ShelfItemDao extends ShelfItemDao {
             (ShelfItem item) => <String, dynamic>{
                   'id': item.id,
                   'ruleID': item.ruleID,
+                  'contentType': item.contentType,
                   'itemJson': item.itemJson
                 });
 
@@ -241,14 +243,17 @@ class _$ShelfItemDao extends ShelfItemDao {
   final QueryAdapter _queryAdapter;
 
   static final _shelfItemMapper = (Map<String, dynamic> row) => ShelfItem(
-      row['id'] as int, row['ruleID'] as int, row['itemJson'] as String);
+      row['id'] as int,
+      row['ruleID'] as int,
+      row['contentType'] as String,
+      row['itemJson'] as String);
 
   final InsertionAdapter<ShelfItem> _shelfItemInsertionAdapter;
 
   final DeletionAdapter<ShelfItem> _shelfItemDeletionAdapter;
 
   @override
-  Future<ShelfItem> findRuleById(int id) async {
+  Future<ShelfItem> findShelfItemById(int id) async {
     return _queryAdapter.query('SELECT * FROM shelfitem WHERE id = ?',
         arguments: <dynamic>[id], mapper: _shelfItemMapper);
   }

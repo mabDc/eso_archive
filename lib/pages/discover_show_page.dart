@@ -3,12 +3,12 @@ import 'package:flutter_liquidcore/liquidcore.dart';
 
 import '../database/rule.dart';
 import '../utils/parser.dart';
-import '../ui/show_items.dart';
-import '../ui/show_error.dart';
-import '../ui/custom_list_tile.dart';
+import 'show_items.dart';
+import 'show_error.dart';
 import '../global/global.dart';
-import 'video_page.dart';
-import 'thumbnail_detail_page.dart';
+import 'detail_page.dart';
+import 'show_item.dart';
+import '../database/search_item.dart';
 
 class DiscoverShowPage extends StatefulWidget {
   DiscoverShowPage({
@@ -120,55 +120,14 @@ class _DiscoverShowPageState extends State<DiscoverShowPage> {
                     : widget.rule.searchItems);
               },
               buildItem: (_item) {
-                final onTap = () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      switch (widget.rule.contentType) {
-                        case 'video':
-                          return VideoPage(
-                            rule: widget.rule,
-                            item: _item,
-                            jsContext: jsContext,
-                          );
-                          break;
-                        case 'thumbnail':
-                          return ThumbnailDetailPage(
-                            rule: widget.rule,
-                            item: _item,
-                            jsContext: jsContext,
-                          );
-                        default:
-                          return Scaffold(
-                            appBar: AppBar(
-                              title: Text('contentType error'),
-                            ),
-                            body: ShowError(
-                              errorMsg:
-                                  'undefined contentType of ${widget.rule.contentType} in rule ${widget.rule.name}',
-                            ),
-                          );
-                      }
-                    }));
-
-                if (_item["type"] == 'customListTile') {
-                  return Card(
-                  child:CustomListItem(
-                    itemJson: _item,
-                    onTap: onTap,
-                  ));
-                }
-                return Card(
-                  child: ListTile(
-                    leading: Image.network('${_item['thumbnailUrl']}'),
-                    title: Text('${_item['title']}'),
-                    subtitle: Text(
-                      '${_item['subtitle']}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                return ShowItem(
+                  item: _item,
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => DetailPage(
+                      searchItem:
+                          SearchItem(ruleID: widget.rule.id, item: _item, contentType: widget.rule.contentType),
                     ),
-                    trailing: Text('${_item['trailing']}'),
-                    isThreeLine: true,
-                    onTap: onTap,
-                  ),
+                  )),
                 );
               },
             );

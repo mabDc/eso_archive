@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../database/rule.dart';
-import '../ui/primary_color_text.dart';
 import '../global/global.dart';
 
 class RuleEditPage extends StatefulWidget {
@@ -19,20 +18,6 @@ class RuleEditPage extends StatefulWidget {
 
 class _RuleEditPageState extends State<RuleEditPage> {
   Rule rule;
-
-  // Widget _buildTextField(String text, String labelText) {
-  //   return Padding(
-  //     padding: EdgeInsets.fromLTRB(14, 0, 14, 8),
-  //     child: TextField(
-  //       controller: TextEditingController(text: text),
-  //       minLines: 1,
-  //       maxLines: null,
-  //       decoration: InputDecoration(
-  //         labelText: labelText,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   void initState() {
@@ -73,7 +58,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: PrimaryColorText('info'),
+            title: Text('info' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -134,7 +119,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('enable'),
+            title: Text('enable' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -161,7 +146,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('discover'),
+            title: Text('discover' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -200,7 +185,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('search'),
+            title: Text('search' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -239,7 +224,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('detail'),
+            title: Text('detail' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -278,7 +263,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('chapter'),
+            title: Text('chapter' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -326,7 +311,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('content'),
+            title: Text('content' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(

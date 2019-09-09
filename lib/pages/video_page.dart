@@ -3,22 +3,19 @@ import 'package:flutter_liquidcore/liquidcore.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import '../database/rule.dart';
-import '../ui/primary_color_text.dart';
+import '../database/search_item.dart';
 import '../global/global.dart';
 import '../utils/parser.dart';
 import 'show_item.dart';
+import 'show_error.dart';
 
 class VideoPage extends StatefulWidget {
   VideoPage({
-    @required this.rule,
-    @required this.item,
-    @required this.jsContext,
+    @required this.searchItem,
     Key key,
   }) : super(key: key);
 
-  final Rule rule;
-  final dynamic item;
-  final JSContext jsContext;
+  final SearchItem searchItem;
   @override
   _VideoPageState createState() => _VideoPageState();
 }
@@ -27,47 +24,56 @@ class _VideoPageState extends State<VideoPage>
     with SingleTickerProviderStateMixin {
   VideoPlayerController videoPlayerController;
   TabController tabcontroller;
-  final List<Widget> chapter = <Widget>[];
-  final List<Widget> info = <Widget>[];
-  String title = '';
+  JSContext jsContext;
+  Future<bool> initFuture;
+
+  List<Widget> chapter;
+  List<Widget> info;
+  String title;
   String url;
-  bool notFirst = false;
+  String ruleContentURL;
+  bool enMultiRoads;
+  bool isInShelf;
 
   @override
   void initState() {
     super.initState();
+    title = widget.searchItem.item['title']?.toString() ?? '';
+    initFuture = init();
+    jsContext = JSContext();
     tabcontroller = TabController(length: 2, vsync: this);
   }
 
-  Future<bool> initPage() async {
-    if (notFirst) {
-      return true;
-    } else {
-      notFirst = true;
+  Future<bool> init() async {
+    Rule rule = await Global.ruleDao.findRuleById(widget.searchItem.ruleID);
+    final shelfItem = await Global.shelfItemDao
+        .findShelfItemById(widget.searchItem.shelfItem.id);
+    isInShelf = shelfItem != null;
+    enMultiRoads = rule.enMultiRoads;
+    ruleContentURL = rule.contentUrl;
+    if (rule.enCheerio) {
+      String script =
+          await DefaultAssetBundle.of(context).loadString(Global.cheerioFile);
+      await jsContext.evaluateScript(script);
     }
-    final jsContext = widget.jsContext;
-    await jsContext.setProperty('item', widget.item);
-
-    if (widget.rule.detailUrl != null && widget.rule.detailUrl.trim() != '') {
-      final url = await jsContext.evaluateScript(widget.rule.detailUrl);
+    await jsContext.setProperty('item', widget.searchItem.item);
+    if (rule.detailUrl != null && rule.detailUrl.trim() != '') {
+      final url = await jsContext.evaluateScript(rule.detailUrl);
       await jsContext.setProperty('url', url);
       final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
     }
-    dynamic detailItems =
-        await jsContext.evaluateScript(widget.rule.detailItems);
+    dynamic detailItems = await jsContext.evaluateScript(rule.detailItems);
     detailBuild(detailItems);
 
-    if (widget.rule.chapterUrl != null && widget.rule.chapterUrl.trim() != '') {
-      final url = await jsContext.evaluateScript(widget.rule.chapterUrl);
+    if (rule.chapterUrl != null && rule.chapterUrl.trim() != '') {
+      final url = await jsContext.evaluateScript(rule.chapterUrl);
       await jsContext.setProperty('url', url);
       final response = await Parser().urlParser(url);
       await jsContext.setProperty('body', response.body);
     }
-    dynamic chapterItems =
-        await jsContext.evaluateScript(widget.rule.chapterItems);
+    dynamic chapterItems = await jsContext.evaluateScript(rule.chapterItems);
     chapterBuild(chapterItems);
-    setState(() {});
     return true;
   }
 
@@ -81,7 +87,6 @@ class _VideoPageState extends State<VideoPage>
         videoPlayerController = VideoPlayerController.network(url);
       }
     }
-    initPage();
     final body = Column(
       children: <Widget>[
         url == null
@@ -126,51 +131,50 @@ class _VideoPageState extends State<VideoPage>
         ),
       ],
     );
-    return Global.profile.enFullScreen
-        ? Scaffold(
-            body: body,
-          )
-        : Scaffold(
-            appBar: AppBar(title: Text(title)),
-            body: body,
-          );
+    final floatingActionButton = FloatingActionButton(
+      child: isInShelf
+          ? Icon(Icons.favorite)
+          : Icon(Icons.favorite_border),
+      tooltip: 'add to shelf',
+      onPressed: () async {
+        if (isInShelf) {
+          await Global.shelfItemDao
+              .deleteShelfItem(widget.searchItem.shelfItem);
+        } else {
+          await Global.shelfItemDao
+              .insertOrUpdateShelfItem(widget.searchItem.shelfItem);
+        }
+        setState(() {
+          isInShelf = !isInShelf;
+        });
+      },
+    );
+    return FutureBuilder<bool>(
+        future: init(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return ShowError(
+              errorMsg: snapshot.error,
+            );
+          }
+          if (!snapshot.hasData || !snapshot.data) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return Global.profile.enFullScreen
+              ? Scaffold(
+                  body: body,
+                  floatingActionButton: floatingActionButton,
+                )
+              : Scaffold(
+                  appBar: AppBar(title: Text(title)),
+                  body: body,
+                  floatingActionButton: floatingActionButton,
+                );
+        });
   }
 
   void detailBuild(dynamic detailItems) {
-    title = '${widget.item['title']}';
-    info.add(ShowItem(item: widget.item));
-    
-    // dynamic item = widget.item;
-    // title = '${item['title']}';
-    // if (item["type"] == 'customListTile') {
-    //   info.add(CustomListItem(itemJson: item));
-    // } else {
-    //   info.add(Card(
-    //     child: ListTile(
-    //       leading: Image.network('${item['thumbnailUrl']}'),
-    //       title: Text('${item['title']}'),
-    //       subtitle: Text(
-    //         '${item['subtitle']}',
-    //         maxLines: 2,
-    //         overflow: TextOverflow.ellipsis,
-    //       ),
-    //       trailing: Text('${item['trailing']}'),
-    //       isThreeLine: true,
-    //     ),
-    //   ));
-    // }
-    // info.add(Divider());
-
-    // if (detailItems is String) {
-    //   detailItems = [detailItems];
-    // }
-    // detailItems.forEach((item) {
-    //   info.add(Card(
-    //     child: ListTile(
-    //       title: Text('$item'),
-    //     ),
-    //   ));
-    // });
+    info.add(ShowItem(item: widget.searchItem.item));
 
     if (detailItems is String) {
       detailItems = [detailItems];
@@ -209,7 +213,7 @@ class _VideoPageState extends State<VideoPage>
 
   void chapterBuild(dynamic chapterItems) {
     List roads;
-    if (widget.rule.enMultiRoads == true) {
+    if (enMultiRoads == true) {
       roads = chapterItems;
     } else {
       roads = [chapterItems];
@@ -222,9 +226,18 @@ class _VideoPageState extends State<VideoPage>
                 road['leading']?.toString() ?? '',
                 textAlign: TextAlign.center,
               ),
-        title: PrimaryColorText(road['title']?.toString() ?? ''),
-        subtitle: PrimaryColorText(road['subtitle']?.toString() ?? ''),
-        trailing: PrimaryColorText(road['trailing']?.toString() ?? ''),
+        title: Text(
+          road['title']?.toString() ?? '',
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+        subtitle: Text(
+          road['subtitle']?.toString() ?? '',
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+        trailing: Text(
+          road['trailing']?.toString() ?? '',
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
       ));
       (road['chapter'] as List).forEach((item) {
         chapter.add(Card(
@@ -239,11 +252,11 @@ class _VideoPageState extends State<VideoPage>
             subtitle: Text(item['subtitle']?.toString() ?? ''),
             trailing: Text(item['trailing']?.toString() ?? ''),
             onTap: () async {
-              await widget.jsContext.setProperty('item', item);
+              await jsContext.setProperty('item', item);
               dynamic contentUrl =
-                  await widget.jsContext.evaluateScript(widget.rule.contentUrl);
+                  await jsContext.evaluateScript(ruleContentURL);
               setState(() {
-                title = '${item['title']}';
+                title = item['title']?.toString() ?? '';
                 url = contentUrl;
               });
             },
@@ -258,6 +271,9 @@ class _VideoPageState extends State<VideoPage>
   void dispose() {
     if (videoPlayerController != null) {
       videoPlayerController.dispose();
+    }
+    if (jsContext != null) {
+      jsContext.cleanUp();
     }
     tabcontroller.dispose();
     super.dispose();

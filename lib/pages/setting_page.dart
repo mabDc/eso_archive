@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../ui/primary_color_text.dart';
 import 'package:provider/provider.dart';
 import '../global/profile_change_notifier.dart';
 
@@ -19,7 +18,10 @@ class _SettingPageState extends State<SettingPage> {
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: PrimaryColorText('home settings'),
+            title: Text(
+              'home settings',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
           ),
           Card(
             child: Column(
@@ -42,7 +44,10 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('content settings'),
+            title: Text(
+              'content settings',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
           ),
           Card(
             child: Column(
@@ -75,7 +80,10 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           ListTile(
-            title: PrimaryColorText('other settings'),
+            title: Text(
+              'other settings',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
           ),
           Card(
             child: Column(

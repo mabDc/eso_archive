@@ -9,7 +9,7 @@ import 'profile.dart';
 class Global {
   static SharedPreferences _prefs;
   static Profile profile = Profile();
-  static const cheerioFile = 'lib/js/cheerio.js';
+  static const cheerioFile = 'lib/assets/cheerio.js';
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
 
   static RuleDao _ruleDao;

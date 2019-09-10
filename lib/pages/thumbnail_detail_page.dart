@@ -147,7 +147,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
             padding: EdgeInsets.zero,
             itemCount: items.length,
             itemBuilder: (context, index) {
-              return Image.network(items[index]);
+              return FadeInImage.assetNetwork(placeholder: 'lib/assets/waiting.png',image: items[index],);
             },
           );
           return Global.profile.enFullScreen
@@ -202,7 +202,7 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
           );
         }
         if (!snapshot.hasData || !snapshot.data) {
-          return Center(child: CircularProgressIndicator());
+          return Scaffold(body: Center(child: CircularProgressIndicator()),);
         }
         return Scaffold(
           appBar: AppBar(

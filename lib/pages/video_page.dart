@@ -164,7 +164,7 @@ class _VideoPageState extends State<VideoPage>
             );
           }
           if (!snapshot.hasData || !snapshot.data) {
-            return Center(child: CircularProgressIndicator());
+            return Scaffold(body: Center(child: CircularProgressIndicator()),);
           }
           return Global.profile.enFullScreen
               ? Scaffold(

@@ -156,7 +156,7 @@ class _VideoPageState extends State<VideoPage>
       }
     }
     return FutureBuilder<bool>(
-        future: init(),
+        future: initFuture,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ShowError(

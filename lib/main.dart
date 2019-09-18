@@ -7,7 +7,9 @@ import 'global/global.dart';
 import 'pages/show_error.dart';
 import 'global/profile_change_notifier.dart';
 
-void main() => Global.init().then((e) async {
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+    Global.init().then((e) async {
       ErrorWidget.builder = (FlutterErrorDetails err) {
         String errorMsg = err.toString();
         return ShowError(errorMsg: errorMsg);
@@ -23,6 +25,7 @@ void main() => Global.init().then((e) async {
         SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
       }
     });
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

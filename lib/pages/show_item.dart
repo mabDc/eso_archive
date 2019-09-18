@@ -173,7 +173,7 @@ class ShowItem extends StatelessWidget {
     } else {
       return ListTile(
         leading: item['thumbnailUrl'] == null
-            ? Container()
+            ? null
             : Image.network('${item['thumbnailUrl']}'),
         title: Text(item['title']?.toString() ?? ''),
         subtitle: Text(

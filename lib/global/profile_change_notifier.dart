@@ -10,6 +10,10 @@ class ProfileChangeNotifier extends ChangeNotifier {
     Global.saveProfile();
     super.notifyListeners();
   }
+
+  void pureNotifyListeners() {
+    super.notifyListeners();
+  }
 }
 
 class ThemeModel extends ProfileChangeNotifier {
@@ -21,6 +25,8 @@ class ThemeModel extends ProfileChangeNotifier {
     if (enable != enDarkMode) {
       _profile.enBrightnessDark = enable;
       notifyListeners();
+    } else {
+      pureNotifyListeners();
     }
   }
 
@@ -28,6 +34,8 @@ class ThemeModel extends ProfileChangeNotifier {
     if (value != color) {
       _profile.color = value;
       notifyListeners();
+    } else {
+      pureNotifyListeners();
     }
   }
 
@@ -35,6 +43,8 @@ class ThemeModel extends ProfileChangeNotifier {
     if (value != customColor) {
       _profile.customColor = value;
       notifyListeners();
+    } else {
+      pureNotifyListeners();
     }
   }
 }
@@ -50,6 +60,8 @@ class SettingModel extends ProfileChangeNotifier {
     if (enable != enTabBar) {
       _profile.enTabBar = enable;
       notifyListeners();
+    } else {
+      pureNotifyListeners();
     }
   }
 
@@ -57,6 +69,8 @@ class SettingModel extends ProfileChangeNotifier {
     if (enable != enAutoRefresh) {
       _profile.enAutoRefresh = enable;
       notifyListeners();
+    } else {
+      pureNotifyListeners();
     }
   }
 
@@ -64,6 +78,8 @@ class SettingModel extends ProfileChangeNotifier {
     if (enable != enFullScreen) {
       _profile.enFullScreen = enable;
       notifyListeners();
+    } else {
+      pureNotifyListeners();
     }
   }
 
@@ -71,6 +87,8 @@ class SettingModel extends ProfileChangeNotifier {
     if (enable != enTabBar) {
       _profile.enVolumeControl = enable;
       notifyListeners();
+    } else {
+      pureNotifyListeners();
     }
   }
 
@@ -78,6 +96,8 @@ class SettingModel extends ProfileChangeNotifier {
     if (enable != enTabBar) {
       _profile.enFlippingAnimation = enable;
       notifyListeners();
+    } else {
+      pureNotifyListeners();
     }
   }
 }

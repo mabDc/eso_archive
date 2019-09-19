@@ -139,12 +139,16 @@ class _CustomItem {
   final String readDuration;
 
   _CustomItem.safeFromJson(Map json)
-      : thumbnailUrl = json['thumbnailUrl']?.toString() ?? '',
-        title = json['title']?.toString() ?? '',
-        subtitle = json['subtitle']?.toString() ?? '',
-        author = json['author']?.toString() ?? '',
-        publishDate = json['publishDate']?.toString() ?? '',
-        readDuration = json['readDuration']?.toString() ?? '';
+      : thumbnailUrl =
+            json['thumbnailUrl']?.toString() ?? json['封面']?.toString() ?? '',
+        title = json['title']?.toString() ?? json['标题']?.toString() ?? '',
+        subtitle =
+            json['subtitle']?.toString() ?? json['副标题']?.toString() ?? '',
+        author = json['author']?.toString() ?? json['作者']?.toString() ?? '',
+        publishDate =
+            json['publishDate']?.toString() ?? json['日期']?.toString() ?? '',
+        readDuration =
+            json['readDuration']?.toString() ?? json['分类']?.toString() ?? '';
 }
 
 class ShowItem extends StatelessWidget {
@@ -160,7 +164,7 @@ class ShowItem extends StatelessWidget {
   final VoidCallback onLongPress;
 
   Widget buildChild(dynamic item) {
-    if (item["type"] == 'customListTile') {
+    if (item["type"] == 'customListTile' || item['风格'] == '自定义卡片') {
       final _item = _CustomItem.safeFromJson(item);
       return _CustomListItem(
         thumbnailUrl: _item.thumbnailUrl,
@@ -172,16 +176,16 @@ class ShowItem extends StatelessWidget {
       );
     } else {
       return ListTile(
-        leading: item['thumbnailUrl'] == null
+        leading: item['thumbnailUrl'] == null && item['封面'] == null
             ? null
-            : Image.network('${item['thumbnailUrl']}'),
-        title: Text(item['title']?.toString() ?? ''),
+            : Image.network('${item['thumbnailUrl']}'??'${item['封面']}'),
+        title: Text(item['title']?.toString() ??item['标题']?.toString() ?? ''),
         subtitle: Text(
-          item['subtitle']?.toString() ?? '',
+          item['subtitle']?.toString() ??item['副标题']?.toString() ?? '',
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: Text(item['trailing']?.toString() ?? ''),
+        trailing: Text(item['后缀']?.toString() ?? ''),
         isThreeLine: true,
       );
     }

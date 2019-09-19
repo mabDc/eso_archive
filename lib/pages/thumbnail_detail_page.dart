@@ -76,16 +76,16 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
     }
 
     detailItems.forEach((item) {
-      if (item is String) {
+      if (item is String || item is num) {
         info.add(Card(
           child: ListTile(
             title: Text('$item'),
           ),
         ));
       } else if (item is Map) {
-        dynamic type = item['type'];
-        if (type == 'thumbnail') {
-          dynamic thumbnailUrl = item["thumbnailUrl"];
+        dynamic type = item['type'] ?? item['风格'];
+        if (type == 'thumbnail' || type == '图片') {
+          dynamic thumbnailUrl = item["thumbnailUrl"] ?? item["地址"];
           if (thumbnailUrl != null && thumbnailUrl != '') {
             info.add(Card(
               child: Image.network(thumbnailUrl),
@@ -94,12 +94,16 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
         } else {
           info.add(Card(
             child: ListTile(
-              leading: item['thumbnailUrl'] == null
+              leading: item['thumbnailUrl'] == null && item['封面'] == null
                   ? null
-                  : Image.network(item['thumbnailUrl']),
-              title: Text(item['title']?.toString() ?? ''),
-              subtitle: Text(item['subtitle']?.toString() ?? ''),
-              trailing: Text(item['trailing']?.toString() ?? ''),
+                  : Image.network(item['thumbnailUrl'] ?? item['封面']),
+              title: Text(
+                  item['title']?.toString() ?? item['标题']?.toString() ?? ''),
+              subtitle: Text(item['subtitle']?.toString() ??
+                  item['副标题']?.toString() ??
+                  ''),
+              trailing: Text(
+                  item['trailing']?.toString() ?? item['后缀']?.toString() ?? ''),
             ),
           ));
         }
@@ -147,7 +151,10 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
             padding: EdgeInsets.zero,
             itemCount: items.length,
             itemBuilder: (context, index) {
-              return FadeInImage.assetNetwork(placeholder: 'lib/assets/waiting.png',image: items[index],);
+              return FadeInImage.assetNetwork(
+                placeholder: 'lib/assets/waiting.png',
+                image: items[index],
+              );
             },
           );
           return Global.profile.enFullScreen
@@ -163,27 +170,39 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
         }));
       };
       chapter.add(Card(
-          child: item["lock"] == null
+          child: item["lock"] == null && item["锁定"] == null
               ? ListTile(
-                  leading: item['leading'] == null
+                  leading: item['leading'] == null && item['前缀'] == null
                       ? null
                       : Text(
-                          item['leading']?.toString() ?? '',
+                          item['leading']?.toString() ??
+                              item['前缀']?.toString() ??
+                              '',
                           textAlign: TextAlign.center,
                         ),
-                  title: Text(item['title']?.toString() ?? ''),
-                  subtitle: Text(item['subtitle']?.toString() ?? ''),
+                  title: Text(item['title']?.toString() ??
+                      item['标题']?.toString() ??
+                      ''),
+                  subtitle: Text(item['subtitle']?.toString() ??
+                      item['副标题']?.toString() ??
+                      ''),
                   onTap: onTap,
                 )
               : ListTile(
-                  leading: item['leading'] == null
+                  leading: item['leading'] == null && item['前缀'] == null
                       ? null
                       : Text(
-                          item['leading']?.toString() ?? '',
+                          item['leading']?.toString() ??
+                              item['前缀']?.toString() ??
+                              '',
                           textAlign: TextAlign.center,
                         ),
-                  title: Text(item['title']?.toString() ?? ''),
-                  subtitle: Text(item['subtitle']?.toString() ?? ''),
+                  title: Text(item['title']?.toString() ??
+                      item['标题']?.toString() ??
+                      ''),
+                  subtitle: Text(item['subtitle']?.toString() ??
+                      item['副标题']?.toString() ??
+                      ''),
                   trailing: Icon(Icons.lock),
                   onTap: onTap,
                 )));
@@ -202,7 +221,9 @@ class _ThumbnailDetailPageState extends State<ThumbnailDetailPage> {
           );
         }
         if (!snapshot.hasData || !snapshot.data) {
-          return Scaffold(body: Center(child: CircularProgressIndicator()),);
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         return Scaffold(
           appBar: AppBar(

@@ -186,16 +186,16 @@ class _VideoPageState extends State<VideoPage>
       detailItems = [detailItems];
     }
     detailItems.forEach((item) {
-      if (item is String) {
+      if (item is String || item is num) {
         info.add(Card(
           child: ListTile(
             title: Text('$item'),
           ),
         ));
       } else if (item is Map) {
-        dynamic type = item['type'];
-        if (type == 'thumbnail') {
-          dynamic thumbnailUrl = item["thumbnailUrl"];
+        dynamic type = item['type'] ?? item['风格'];
+        if (type == 'thumbnail' || type == '图片') {
+          dynamic thumbnailUrl = item["thumbnailUrl"] ?? item["地址"];
           if (thumbnailUrl != null && thumbnailUrl != '') {
             info.add(Card(
               child: Image.network(thumbnailUrl),
@@ -204,12 +204,16 @@ class _VideoPageState extends State<VideoPage>
         } else {
           info.add(Card(
             child: ListTile(
-              leading: item['thumbnailUrl'] == null
+              leading: item['thumbnailUrl'] == null && item['封面'] == null
                   ? null
-                  : Image.network(item['thumbnailUrl']),
-              title: Text(item['title']?.toString() ?? ''),
-              subtitle: Text(item['subtitle']?.toString() ?? ''),
-              trailing: Text(item['trailing']?.toString() ?? ''),
+                  : Image.network(item['thumbnailUrl'] ?? item['封面']),
+              title: Text(
+                  item['title']?.toString() ?? item['标题']?.toString() ?? ''),
+              subtitle: Text(item['subtitle']?.toString() ??
+                  item['副标题']?.toString() ??
+                  ''),
+              trailing: Text(
+                  item['trailing']?.toString() ?? item['后缀']?.toString() ?? ''),
             ),
           ));
         }

@@ -118,8 +118,8 @@ class PageModel with ChangeNotifier {
     if (needUpdatePage) {
       await _pageController.animateToPage(index,
           duration: Duration(microseconds: 10), curve: Curves.ease);
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   @override

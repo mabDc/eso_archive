@@ -34,10 +34,10 @@ class Global {
     _ruleDao = _database.ruleDao;
     _shelfItemDao = _database.shelfItemDao;
 
-    String first = _prefs.getString("first");
-    if(first == null || first != 'pufei'){
+    String ruleversion = _prefs.getString("ruleversion");
+    if(ruleversion == null || ruleversion != 'zhongwen'){
       await _ruleDao.insertOrUpdateRules(Neizhi.rules.map((json)=>Rule.safeFromJson(json)).toList());
-      await _prefs.setString("first", 'pufei');
+      await _prefs.setString("ruleversion", 'zhongwen');
     }
   }
 

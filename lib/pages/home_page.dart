@@ -1,25 +1,14 @@
 import 'package:flutter/material.dart';
-import 'search_page.dart';
-import 'detail_page.dart';
-import 'show_item.dart';
-import '../database/shelf_item.dart';
+
 import '../database/search_item.dart';
+import '../database/shelf_item.dart';
 import '../global/global.dart';
+import 'detail_page.dart';
+import 'search_page.dart';
 import 'show_error.dart';
+import 'show_item.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  List<ShelfItem> shelfItems;
-
-  Future<bool> initItems() async {
-    shelfItems = await Global.shelfItemDao.findAllShelfItems();
-    return true;
-  }
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,21 +22,22 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: initItems(),
+      body: FutureBuilder<List<ShelfItem>>(
+        future: Global.shelfItemDao.findAllShelfItems(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return ShowError(
               errorMsg: snapshot.error,
             );
           }
-          if (!snapshot.hasData || !snapshot.data) {
+          if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           }
+          print('build');
           return ListView.builder(
-            itemCount: shelfItems.length,
+            itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
-              ShelfItem shelfItem = shelfItems[index];
+              ShelfItem shelfItem = snapshot.data[index];
               SearchItem searchItem = SearchItem.fromShelfItem(shelfItem);
               return ShowItem(
                 item: searchItem.item,
@@ -56,24 +46,6 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) => DetailPage(
                             searchItem: searchItem,
                           )));
-                },
-                onLongPress: () async {
-                  await Global.shelfItemDao.deleteShelfItem(shelfItem);
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                      'deleted',
-                    ),
-                    action: SnackBarAction(
-                      label: 'undo',
-                      textColor: Theme.of(context).primaryColor,
-                      onPressed: () async {
-                        await Global.shelfItemDao
-                            .insertOrUpdateShelfItem(shelfItem);
-                        setState(() {});
-                      },
-                    ),
-                  ));
-                  setState(() {});
                 },
               );
             },

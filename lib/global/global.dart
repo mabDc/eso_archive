@@ -11,7 +11,8 @@ import '../rule/neizhi.dart';
 class Global {
   static SharedPreferences _prefs;
   static Profile profile = Profile();
-  static const cheerioFile = 'lib/assets/cheerio.js';
+  static const cheerioFile = 'lib/assets/cheerio.min.js';
+  static const md5File = 'lib/assets/md5.min.js';
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
 
   static RuleDao _ruleDao;

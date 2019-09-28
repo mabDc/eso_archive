@@ -55,7 +55,7 @@ class ColorLensPage extends StatelessWidget {
         final customColor = Color(themeModel.customColor);
         return Scaffold(
           appBar: AppBar(
-            title: Text('Color Lens'),
+            title: Text('调色板'),
           ),
           body: ListView.builder(
             itemCount: Colors.primaries.length + 2,
@@ -64,7 +64,7 @@ class ColorLensPage extends StatelessWidget {
                 case 0:
                   return Card(
                     child: SwitchListTile(
-                      title: Text('Night Mode'),
+                      title: Text('夜间模式'),
                       value: themeModel.enDarkMode,
                       onChanged: (value) {
                         themeModel.enDarkMode = value;
@@ -85,17 +85,17 @@ class ColorLensPage extends StatelessWidget {
                         children: <Widget>[
                           _ColorInput(
                               customColor.red,
-                              'red',
+                              '红',
                               (red) => themeModel.customColor =
                                   customColor.withRed(red).value),
                           _ColorInput(
                               customColor.green,
-                              'green',
+                              '绿',
                               (green) => themeModel.customColor =
                                   customColor.withGreen(green).value),
                           _ColorInput(
                               customColor.blue,
-                              'blue',
+                              '蓝',
                               (blue) => themeModel.customColor =
                                   customColor.withBlue(blue).value),
                         ],
@@ -116,7 +116,7 @@ class ColorLensPage extends StatelessWidget {
                         width: 32,
                       ),
                       title: Text(
-                          'r:${primaryColor.red} g:${primaryColor.green} b:${primaryColor.blue}'),
+                          '红${primaryColor.red}  绿${primaryColor.green}  蓝${primaryColor.blue}'),
                       onTap: () {
                         themeModel.color = primaryColor.value;
                       },

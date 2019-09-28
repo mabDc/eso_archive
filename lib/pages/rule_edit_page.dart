@@ -29,7 +29,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('edit-${rule.name}'),
+        title: Text('${rule.name}'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
@@ -58,7 +58,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: Text('info' ,style: TextStyle(color: Theme.of(context).primaryColor),),
+            title: Text('基本信息' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -66,7 +66,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                 ListTile(
                   title: Text('id: ${rule.id}'),
                   subtitle: Text(
-                      'time ${DateTime.fromMicrosecondsSinceEpoch(rule.id)}'),
+                      '创建时间 ${DateTime.fromMicrosecondsSinceEpoch(rule.id)}'),
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(14, 0, 14, 8),
@@ -75,7 +75,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'name',
+                      labelText: '名称(name)',
                     ),
                     onChanged: (text) {
                       rule.name = text;
@@ -89,7 +89,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'host',
+                      labelText: '域名(host)',
                     ),
                     onChanged: (text) {
                       rule.host = text;
@@ -119,14 +119,14 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: Text('enable' ,style: TextStyle(color: Theme.of(context).primaryColor),),
+            title: Text('开关' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
               children: <Widget>[
                 SwitchListTile(
                   value: rule.enable,
-                  title: Text('enable'),
+                  title: Text('启用搜索(enable)'),
                   onChanged: (value) {
                     setState(() {
                       rule.enable = value;
@@ -135,18 +135,23 @@ class _RuleEditPageState extends State<RuleEditPage> {
                 ),
                 SwitchListTile(
                   value: rule.enCheerio,
-                  title: Text('enCheerio'),
+                  title: Text('加载html解析库(enCheerio)'),
                   onChanged: (value) {
                     setState(() {
                       rule.enCheerio = value;
                     });
                   },
                 ),
+                SwitchListTile(
+                  value: false,
+                  title: Text('加载md5加密库(enMD5)'),
+                  onChanged: null
+                ),
               ],
             ),
           ),
           ListTile(
-            title: Text('discover' ,style: TextStyle(color: Theme.of(context).primaryColor),),
+            title: Text('发现规则 (discover)' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -158,7 +163,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'discoverUrl',
+                      labelText: '发现地址 (discoverUrl)',
                     ),
                     onChanged: (text) {
                       rule.discoverUrl = text;
@@ -172,7 +177,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'discoverItems',
+                      labelText: '发现内容 (discoverItems)',
                     ),
                     onChanged: (text) {
                       rule.discoverItems = text;
@@ -185,7 +190,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: Text('search' ,style: TextStyle(color: Theme.of(context).primaryColor),),
+            title: Text('搜索规则 (search)' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -197,7 +202,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'searchUrl',
+                      labelText: '搜索地址 (searchUrl)',
                     ),
                     onChanged: (text) {
                       rule.searchUrl = text;
@@ -211,7 +216,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'searchItems',
+                      labelText: '搜索内容 (searchItems)',
                     ),
                     onChanged: (text) {
                       rule.searchItems = text;
@@ -224,7 +229,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: Text('detail' ,style: TextStyle(color: Theme.of(context).primaryColor),),
+            title: Text('详情页规则 (detail)' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -236,7 +241,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'detailUrl',
+                      labelText: '详情页地址 (detailUrl)',
                     ),
                     onChanged: (text) {
                       rule.detailUrl = text;
@@ -250,7 +255,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'detailItems',
+                      labelText: '详情页内容 (detailItems)',
                     ),
                     onChanged: (text) {
                       rule.detailItems = text;
@@ -263,14 +268,14 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: Text('chapter' ,style: TextStyle(color: Theme.of(context).primaryColor),),
+            title: Text('章节规则 (chapter)' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
               children: <Widget>[
                 SwitchListTile(
                   value: rule.enMultiRoads,
-                  title: Text('enMultiRoads'),
+                  title: Text('启用多线路 (enMultiRoads)'),
                   onChanged: (value){
                     setState(() {
                      rule.enMultiRoads = value; 
@@ -284,7 +289,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'chapterUrl',
+                      labelText: '章节地址 (chapterUrl)',
                     ),
                     onChanged: (text) {
                       rule.chapterUrl = text;
@@ -298,7 +303,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'chapterItems',
+                      labelText: '章节内容 (chapterItems)',
                     ),
                     onChanged: (text) {
                       rule.chapterItems = text;
@@ -311,7 +316,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
             ),
           ),
           ListTile(
-            title: Text('content' ,style: TextStyle(color: Theme.of(context).primaryColor),),
+            title: Text('正文规则 (content)' ,style: TextStyle(color: Theme.of(context).primaryColor),),
           ),
           Card(
             child: Column(
@@ -323,7 +328,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'contentUrl',
+                      labelText: '正文地址 (contentUrl)',
                     ),
                     onChanged: (text) {
                       rule.contentUrl = text;
@@ -337,7 +342,7 @@ class _RuleEditPageState extends State<RuleEditPage> {
                     minLines: 1,
                     maxLines: null,
                     decoration: InputDecoration(
-                      labelText: 'contentItems',
+                      labelText: '正文内容 (contentItems)',
                     ),
                     onChanged: (text) {
                       rule.contentItems = text;

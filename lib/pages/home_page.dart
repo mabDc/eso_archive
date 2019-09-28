@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('eso'),
+        title: Text('易搜'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -33,7 +33,14 @@ class HomePage extends StatelessWidget {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           }
-          print('build');
+          if (snapshot.data.length == 0) {
+            return Center(
+              child: Text(
+                '可通过搜索或发现寻找内容并收藏',
+                style: TextStyle(color: Colors.grey[700]),
+              ),
+            );
+          }
           return ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {

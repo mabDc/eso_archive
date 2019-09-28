@@ -1,31 +1,9 @@
 class Neizhi {
   static const rules = [
     {
-      "id": 1567415932634302,
-      "enable": true,
-      "name": "rsshub",
-      "host": "https://rsshub.app/meituan/tech/home",
-      "contentType": "thumbnail",
-      "enCheerio": true,
-      "discoverUrl": "host",
-      "discoverItems":
-          "(() => {\n  var regex = /<item>\\s*<title>([\\s\\S]*?)><\\/title>\\s*<description>([\\s\\S]*?)<\\/description>[\\s\\S]*?<link>([\\s\\S]*?)<\\/link>/g;\n  var items = [];\n  while(true){\n  var m = regex.exec(body);\n    if(!m) return items;\n    items.push({title:m[1].replace(/<!\\[CDATA\\[|\\]\\]/g,''),description:m[2].replace(/<!\\[CDATA\\[|\\]\\]/g,''),subtitle:m[3]})\n  }\n})();",
-      "searchUrl": "// see discoverUrl",
-      "searchItems": "// see discoverItems",
-      "detailUrl": "",
-      "detailItems":
-          "(() => {\n  var \$ = cheerio.load(item.description);\n  var items = [];\n  var texts = [];\n  \$('*').each((index, item) => {\n    if (item.tagName.toLowerCase() == 'img') {\n      if (texts.length > 0) {\n        items.push(texts.join('\\n\\n'));\n        texts = [];\n      }\n      items.push({\n        type: 'thumbnail',\n        thumbnailUrl: \$(item).attr('src')\n      });\n    } else {\n      var text = \$(item).text();\n      if (text.trim() != '') {\n        texts.push(text.trim())\n      }\n    }\n  });\n  if (texts.length > 0) {\n    items.push(texts.join('\\n\\n'));\n  }\n  return items;\n})();",
-      "enMultiRoads": false,
-      "chapterUrl": "",
-      "chapterItems":
-          "// default type listTile show as following\n// it's diffirent to other rule\n// leading;\n// title;\n// subtitle;\n// lock \n[]",
-      "contentUrl": "item.url",
-      "contentItems": ""
-    },
-    {
       "id": 1567237951402341,
       "enable": true,
-      "name": "rigeng",
+      "name": "日更计划",
       "host": "http://www.rigengjihua.cn",
       "contentType": "thumbnail",
       "enCheerio": false,
@@ -47,30 +25,9 @@ class Neizhi {
           "(()=>{\n  return JSON.parse(body).data.pages.map(page=>page.url)\n})();"
     },
     {
-      "id": 1567244892178206,
-      "enable": true,
-      "name": "zhihu daily",
-      "host": "http://daily.zhihu.com",
-      "contentType": "thumbnail",
-      "enCheerio": true,
-      "discoverUrl": "host",
-      "discoverItems":
-          "(()=>{\n    if(page > 1) return [];\n    var items = [];\n    \$ = cheerio.load(body);\n    \$('.row .wrap').each(function(){\n        var item = \$(this);\n        var thumbnailUrl = item.find('img').attr('src');\n        var url = host + item.find('a').attr('href');\n        var title = item.text();\n        var subtitle = '';\n        var trailing = '';\n        items.push({title,url, thumbnailUrl,subtitle,trailing});\n    });\n    return items;\n})();",
-      "searchUrl": "// see discoverUrl",
-      "searchItems": "// see discoverItems",
-      "detailUrl": "item.url",
-      "detailItems":
-          "(() => {\n  var items = [];\n  var texts = [];\n  \$ = cheerio.load(body);\n  \$('.content p').each(function () {\n    var item = \$(this);\n    var title = item.text();\n    if (title == '') {\n      if (texts.length > 0) {\n        items.push(texts.join('\\n\\n'));\n        texts = [];\n      }\n      items.push({\n        type: 'thumbnail',\n        thumbnailUrl: item.children().attr('src')\n      });\n    } else {\n      texts.push(title)\n    }\n  });\n  if (texts.length > 0) {\n    items.push(texts.join('\\n\\n'));\n    texts = [];\n  }\n  return items;\n})();",
-      "enMultiRoads": false,
-      "chapterUrl": "",
-      "chapterItems": "[]",
-      "contentUrl": "",
-      "contentItems": ""
-    },
-    {
       "id": 1567914709429843,
       "enable": true,
-      "name": "thumbnail example",
+      "name": "有妖气原创漫画梦工厂",
       "host": "http://app.u17.com",
       "contentType": "thumbnail",
       "enCheerio": false,
@@ -94,35 +51,9 @@ class Neizhi {
           "(()=>{\n  var returnData =  JSON.parse(body).data.returnData;\n  var list = returnData.image_list||returnData.free_image_list;\n  return list.map(images=>images.location);\n})();"
     },
     {
-      "id": 1567914720526433,
-      "enable": true,
-      "name": "video example",
-      "host": "http://www.zzzfun.com",
-      "contentType": "video",
-      "enCheerio": true,
-      "discoverUrl":
-          "// you can use variable as following\n// host as 'http://www.zzzfun.com'\n// page as current page\n// url can be a string or map\n// map is like {url, headers, method, body}\n// headers is map, body can be string or list or map\n`\${host}/vod-type-id-1-page-\${page}.html`",
-      "discoverItems":
-          "// you can use variable as following\n// host as 'http://www.zzzfun.com'\n// page as current page\n// url as lastest urlRule executes result\n// body as response.body\n// because of enCheerio is true, \n// you can use `\$=cheerio.load(body)`\n\n// type customListTile show as following\n// thumbnailUrl;\n// title;\n// subtitle;\n// author;\n// publishDate;\n// readDuration;\n\n(()=>{\n  var \$=cheerio.load(body);\n  var items = [];\n  \$('.search-result a').each((index,item) => {\n    var type = 'customListTile';\n    var href = `\${host}\${\$(item).attr('href')}`;\n    var thumbnailUrl = \$('img',item).attr('src');\n    var title = \$('.title-big',item).text();\n    var subtitle = \$('.d-descr',item).text().replace(/\\s/g,'');\n    var author = \$('.title-sub',item).text().replace(/\\s/g,'');\n    var publishDate = 'zzzfun';\n    var readDuration = '';\n    items.push({type, href, thumbnailUrl, title, subtitle, author, publishDate, readDuration});\n  });\n  return items;\n})();",
-      "searchUrl":
-          "// you can use variable as following\n// host as 'http://www.zzzfun.com'\n// page as current page\n// keyword as search key\n`\${host}/vod-search-page-\${page}-wd-\${keyword}.html`",
-      "searchItems":
-          "// here rule is like discoverItems\n(()=>{\n  var \$=cheerio.load(body);\n  var items = [];\n  \$('.show-list li').each((index,item) => {\n    var type = 'customListTile';\n    var href = `\${host}\${\$('h2 a',item).attr('href')}`;\n    var thumbnailUrl = \$('img',item).attr('src');\n    var title = \$('h2 a',item).text();\n    var subtitle = \$('.juqing',item).text();\n    var author = \$('dl',item).first().text().replace(/\\s/g,'');\n    var publishDate = 'zzzfun';\n    var readDuration = '';\n    items.push({type, href, thumbnailUrl, title, subtitle, author, publishDate, readDuration});\n  });\n  return items;\n})();",
-      "detailUrl": "//item is lastest item rule executes result\nitem.href",
-      "detailItems":
-          "// because of holding on jscontext\n// you can use any used variables\n// like host page keyword url item and so on\n(()=>{\n  var \$=cheerio.load(body);\n  var s = [];\n  \$('.count-item').each((index,item) => {\n    s.push(\$(item).text().replace(/\\s/g,''));\n  });\n  var info = \$('.content-row').text().replace(/\\s/g,'');\n  var bieming = \$('.btm-text').text().replace(/\\s/g,'');\n  return [s.join('\\n'),info,bieming];\n\n})();",
-      "enMultiRoads": true,
-      "chapterUrl": "",
-      "chapterItems":
-          "(()=>{\n  var \$=cheerio.load(body);\n  var \$episode = \$('.episode');\n  var roads = [];\n  \$('.slider-list').each((index,slider)=>{\n    // default use listTile, props show as following\n    // leading;\n    // title;\n    // subtitle;\n    // lock;\n    // you should use chapter as list name\n\n    var title = \$(slider).text().trim();\n    var a = \$('a', \$episode[index]);\n    var subtitle = `共 \${a.length} 话`;\n    var chapter = [];\n    a.each((index,item)=>{\n      var title = \$(item).text();\n      var subtitle = \$(item).attr('href');\n      var href = \$(item).attr('href');\n      chapter.push({title, subtitle});\n    });\n    roads.push({title, subtitle,chapter});\n  });\n  return roads;\n})();",
-      "contentUrl":
-          "(()=>{\n  var m = item.subtitle.match(/\\/vod-play-id-(\\d+)-sid-(\\d+)-nid-(\\d+)\\.html/);\n  var sid = m[2];\n  if(sid='1'){\n    sid='';\n  }\n  return `http://111.230.89.165:8089/zapi/play\${sid}.php?url=\${m[1]}-\${m[3]}`;\n})();",
-      "contentItems": ""
-    },
-    {
       "id": 1568768763540463,
       "enable": true,
-      "name": "pufei",
+      "name": "扑飞动漫",
       "host": "http://client.api.nrqu.net",
       "contentType": "thumbnail",
       "enCheerio": false,
@@ -148,9 +79,78 @@ class Neizhi {
       "contentItems": "JSON.parse(body).data.contents.map(a=>a.img)"
     },
     {
-      "id": 1567914709429844,
+      "id": 1567914720526433,
       "enable": true,
-      "name": "中文写法示例",
+      "name": "zzzfun动漫视频网",
+      "host": "http://www.zzzfun.com",
+      "contentType": "video",
+      "enCheerio": true,
+      "discoverUrl":
+          "// you can use variable as following\n// host as 'http://www.zzzfun.com'\n// page as current page\n// url can be a string or map\n// map is like {url, headers, method, body}\n// headers is map, body can be string or list or map\n`\${host}/vod-type-id-1-page-\${page}.html`",
+      "discoverItems":
+          "// you can use variable as following\n// host as 'http://www.zzzfun.com'\n// page as current page\n// url as lastest urlRule executes result\n// body as response.body\n// because of enCheerio is true, \n// you can use `\$=cheerio.load(body)`\n\n// type customListTile show as following\n// thumbnailUrl;\n// title;\n// subtitle;\n// author;\n// publishDate;\n// readDuration;\n\n(()=>{\n  var \$=cheerio.load(body);\n  var items = [];\n  \$('.search-result a').each((index,item) => {\n    var type = 'customListTile';\n    var href = `\${host}\${\$(item).attr('href')}`;\n    var thumbnailUrl = \$('img',item).attr('src');\n    var title = \$('.title-big',item).text();\n    var subtitle = \$('.d-descr',item).text().replace(/\\s/g,'');\n    var author = \$('.title-sub',item).text().replace(/\\s/g,'');\n    var publishDate = 'zzzfun';\n    var readDuration = '';\n    items.push({type, href, thumbnailUrl, title, subtitle, author, publishDate, readDuration});\n  });\n  return items;\n})();",
+      "searchUrl":
+          "// you can use variable as following\n// host as 'http://www.zzzfun.com'\n// page as current page\n// keyword as search key\n`\${host}/vod-search-page-\${page}-wd-\${keyword}.html`",
+      "searchItems":
+          "// here rule is like discoverItems\n(()=>{\n  var \$=cheerio.load(body);\n  var items = [];\n  \$('.show-list li').each((index,item) => {\n    var type = 'customListTile';\n    var href = `\${host}\${\$('h2 a',item).attr('href')}`;\n    var thumbnailUrl = \$('img',item).attr('src');\n    var title = \$('h2 a',item).text();\n    var subtitle = \$('.juqing',item).text();\n    var author = \$('dl',item).first().text().replace(/\\s/g,'');\n    var publishDate = 'zzzfun';\n    var readDuration = '';\n    items.push({type, href, thumbnailUrl, title, subtitle, author, publishDate, readDuration});\n  });\n  return items;\n})();",
+      "detailUrl": "//item is lastest item rule executes result\nitem.href",
+      "detailItems":
+          "// because of holding on jscontext\n// you can use any used variables\n// like host page keyword url item and so on\n(()=>{\n  var \$=cheerio.load(body);\n  var s = [];\n  \$('.count-item').each((index,item) => {\n    s.push(\$(item).text().replace(/\\s/g,''));\n  });\n  var info = \$('.content-row').text().replace(/\\s/g,'');\n  var bieming = \$('.btm-text').text().replace(/\\s/g,'');\n  return [s.join('\\n'),info,bieming];\n\n})();",
+      "enMultiRoads": true,
+      "chapterUrl": "",
+      "chapterItems":
+          "(()=>{\n  var \$=cheerio.load(body);\n  var \$episode = \$('.episode');\n  var roads = [];\n  \$('.slider-list').each((index,slider)=>{\n    // default use listTile, props show as following\n    // leading;\n    // title;\n    // subtitle;\n    // lock;\n    // you should use chapter as list name\n\n    var title = \$(slider).text().trim();\n    var a = \$('a', \$episode[index]);\n    var subtitle = `共 \${a.length} 话`;\n    var chapter = [];\n    a.each((index,item)=>{\n      var title = \$(item).text();\n      var subtitle = \$(item).attr('href');\n      var href = \$(item).attr('href');\n      chapter.push({title, subtitle});\n    });\n    roads.push({title, subtitle,chapter});\n  });\n  return roads;\n})();",
+      "contentUrl":
+          "(()=>{\n  var m = item.subtitle.match(/\\/vod-play-id-(\\d+)-sid-(\\d+)-nid-(\\d+)\\.html/);\n  var sid = m[2];\n  if(sid='1'){\n    sid='';\n  }\n  return `http://111.230.89.165:8089/zapi/play\${sid}.php?url=\${m[1]}-\${m[3]}`;\n})();",
+      "contentItems": ""
+    },
+    {
+      "id": 1567415932634302,
+      "enable": true,
+      "name": "美团技术团队 (RSS)",
+      "host": "https://rsshub.app/meituan/tech/home",
+      "contentType": "thumbnail",
+      "enCheerio": true,
+      "discoverUrl": "host",
+      "discoverItems":
+          "(() => {\n  var regex = /<item>\\s*<title>([\\s\\S]*?)><\\/title>\\s*<description>([\\s\\S]*?)<\\/description>[\\s\\S]*?<link>([\\s\\S]*?)<\\/link>/g;\n  var items = [];\n  while(true){\n  var m = regex.exec(body);\n    if(!m) return items;\n    items.push({title:m[1].replace(/<!\\[CDATA\\[|\\]\\]/g,''),description:m[2].replace(/<!\\[CDATA\\[|\\]\\]/g,''),subtitle:m[3]})\n  }\n})();",
+      "searchUrl": "// see discoverUrl",
+      "searchItems": "// see discoverItems",
+      "detailUrl": "",
+      "detailItems":
+          "(() => {\n  var \$ = cheerio.load(item.description);\n  var items = [];\n  var texts = [];\n  \$('*').each((index, item) => {\n    if (item.tagName.toLowerCase() == 'img') {\n      if (texts.length > 0) {\n        items.push(texts.join('\\n\\n'));\n        texts = [];\n      }\n      items.push({\n        type: 'thumbnail',\n        thumbnailUrl: \$(item).attr('src')\n      });\n    } else {\n      var text = \$(item).text();\n      if (text.trim() != '') {\n        texts.push(text.trim())\n      }\n    }\n  });\n  if (texts.length > 0) {\n    items.push(texts.join('\\n\\n'));\n  }\n  return items;\n})();",
+      "enMultiRoads": false,
+      "chapterUrl": "",
+      "chapterItems":
+          "// default type listTile show as following\n// it's diffirent to other rule\n// leading;\n// title;\n// subtitle;\n// lock \n[]",
+      "contentUrl": "item.url",
+      "contentItems": ""
+    },
+    {
+      "id": 1567244892178206,
+      "enable": true,
+      "name": "知乎日报",
+      "host": "http://daily.zhihu.com",
+      "contentType": "thumbnail",
+      "enCheerio": true,
+      "discoverUrl": "host",
+      "discoverItems":
+          "(()=>{\n    if(page > 1) return [];\n    var items = [];\n    \$ = cheerio.load(body);\n    \$('.row .wrap').each(function(){\n        var item = \$(this);\n        var thumbnailUrl = item.find('img').attr('src');\n        var url = host + item.find('a').attr('href');\n        var title = item.text();\n        var subtitle = '';\n        var trailing = '';\n        items.push({title,url, thumbnailUrl,subtitle,trailing});\n    });\n    return items;\n})();",
+      "searchUrl": "// see discoverUrl",
+      "searchItems": "// see discoverItems",
+      "detailUrl": "item.url",
+      "detailItems":
+          "(() => {\n  var items = [];\n  var texts = [];\n  \$ = cheerio.load(body);\n  \$('.content p').each(function () {\n    var item = \$(this);\n    var title = item.text();\n    if (title == '') {\n      if (texts.length > 0) {\n        items.push(texts.join('\\n\\n'));\n        texts = [];\n      }\n      items.push({\n        type: 'thumbnail',\n        thumbnailUrl: item.children().attr('src')\n      });\n    } else {\n      texts.push(title)\n    }\n  });\n  if (texts.length > 0) {\n    items.push(texts.join('\\n\\n'));\n    texts = [];\n  }\n  return items;\n})();",
+      "enMultiRoads": false,
+      "chapterUrl": "",
+      "chapterItems": "[]",
+      "contentUrl": "",
+      "contentItems": ""
+    },
+    {
+      "id": 1567914709429844,
+      "enable": false,
+      "name": "中文关键字示例",
       "host": "http://app.u17.com",
       "contentType": "thumbnail",
       "enCheerio": false,

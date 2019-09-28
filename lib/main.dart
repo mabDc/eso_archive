@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
               ],
               controller: pageModel.pageController,
               onPageChanged: (index) {
-                //pageModel.changePage(index, false);
+                pageModel.changePage(index, false);
               },
             ),
             bottomNavigationBar: BottomNavigationBar(
@@ -68,11 +68,11 @@ class MyApp extends StatelessWidget {
                   theme.primaryTextTheme.title.color.withOpacity(0.75),
               items: [
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.library_books), title: Text('home')),
+                    icon: Icon(Icons.library_books), title: Text('收藏')),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.satellite), title: Text('discover')),
+                    icon: Icon(Icons.satellite), title: Text('发现')),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.info_outline), title: Text('about')),
+                    icon: Icon(Icons.info_outline), title: Text('关于')),
               ],
               currentIndex: pageModel.currentIndex,
               onTap: (index) {

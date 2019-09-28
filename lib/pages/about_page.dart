@@ -23,7 +23,7 @@ class _AboutPageState extends State<AboutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('about'),
+        title: Text('关于'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.color_lens),
@@ -89,23 +89,23 @@ class _AboutPageState extends State<AboutPage> {
           ),
           Card(
             child: ListTile(
-              title: Text('open source'),
+              title: Text('开源地址'),
               subtitle: Text('https://github.com/mabDc/lizi'),
               onTap: () => lanchUrl('https://github.com/mabDc/lizi'),
             ),
           ),
           Card(
             child: ListTile(
-              title: Text('issues'),
+              title: Text('问题反馈'),
               subtitle: Text('https://github.com/mabDc/lizi/issues'),
               onTap: () => lanchUrl('https://github.com/mabDc/lizi/issues'),
             ),
           ),
           Card(
             child: ListTile(
-              title: Text('check update'),
-              subtitle: Text('click'),
-              onTap: () => print('tap check update'),
+              title: Text('规则说明'),
+              subtitle: Text('https://github.com/mabDc/lizi/blob/master/rule.md'),
+              onTap: () => lanchUrl('https://github.com/mabDc/lizi/blob/master/rule.md'),
             ),
           ),
         ],

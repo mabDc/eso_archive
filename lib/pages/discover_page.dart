@@ -24,7 +24,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('discover'),
+        title: Text('发现'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.edit),
@@ -33,6 +33,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 enEdit = !enEdit;
               });
             },
+          ),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => RuleEditPage())),
           ),
         ],
       ),
@@ -48,83 +53,57 @@ class _DiscoverPageState extends State<DiscoverPage> {
             return Center(child: CircularProgressIndicator());
           }
           return ListView.builder(
-            itemCount: rules.length + 1,
+            itemCount: rules.length,
             itemBuilder: (context, index) {
-              if (index == rules.length) {
-                return Card(
-                  child: ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => RuleEditPage())),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.input),
+              Rule rule = rules[index];
+              return Card(
+                child: enEdit
+                    ? ListTile(
+                        leading: IconButton(
+                          icon: Icon(Icons.delete),
                           onPressed: () async {
-                            // await Clipboard.setData(
-                            //   ClipboardData(text: jsonEncode(Global().rule)));
+                            await Global.ruleDao.deleteRule(rule);
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                '已删除',
+                              ),
+                              action: SnackBarAction(
+                                label: '撤销',
+                                textColor: Theme.of(context).primaryColor,
+                                onPressed: () async {
+                                  await Global.ruleDao.insertOrUpdateRule(rule);
+                                  setState(() {});
+                                },
+                              ),
+                            ));
+                            setState(() {});
                           },
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              } else {
-                Rule rule = rules[index];
-                return Card(
-                  child: enEdit
-                      ? ListTile(
-                          leading: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () async {
-                              await Global.ruleDao.deleteRule(rule);
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                  'deleted',
-                                ),
-                                action: SnackBarAction(
-                                  label: 'undo',
-                                  textColor: Theme.of(context).primaryColor,
-                                  onPressed: () async {
-                                    await Global.ruleDao
-                                        .insertOrUpdateRule(rule);
-                                    setState(() {});
-                                  },
-                                ),
-                              ));
-                              setState(() {});
-                            },
-                          ),
-                          title: Text(rule.name),
-                          subtitle: Text(rule.host),
-                          trailing: IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        RuleEditPage(rule: rule))),
-                          ),
-                          onTap: () =>
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => DiscoverShowPage(
-                                        rule: rule,
-                                      ))),
-                        )
-                      : ListTile(
-                          title: Text(rule.name),
-                          subtitle: Text(rule.host),
-                          onTap: () =>
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => DiscoverShowPage(
-                                        rule: rule,
-                                      ))),
+                        title: Text(rule.name),
+                        subtitle: Text(rule.host),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      RuleEditPage(rule: rule))),
                         ),
-                );
-              }
+                        onTap: () =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => DiscoverShowPage(
+                                      rule: rule,
+                                    ))),
+                      )
+                    : ListTile(
+                        title: Text(rule.name),
+                        subtitle: Text(rule.host),
+                        onTap: () =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => DiscoverShowPage(
+                                      rule: rule,
+                                    ))),
+                      ),
+              );
             },
           );
         },

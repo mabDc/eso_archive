@@ -111,6 +111,7 @@ class PageModel with ChangeNotifier {
   PageModel() {
     _currentIndex = 0;
     _pageController = PageController();
+    _pageController.addListener(() {});
   }
 
   void changePage(int index, [bool needUpdatePage = true]) async {
@@ -118,8 +119,8 @@ class PageModel with ChangeNotifier {
     if (needUpdatePage) {
       await _pageController.animateToPage(index,
           duration: Duration(microseconds: 10), curve: Curves.ease);
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   @override

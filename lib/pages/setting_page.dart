@@ -19,32 +19,10 @@ class _SettingPageState extends State<SettingPage> {
         children: <Widget>[
           ListTile(
             title: Text(
-              'home settings',
+              '正文选项',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
-          ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                SwitchListTile(
-                  title: Text('Tap Bar Navigator'),
-                  value: setting.enTabBar,
-                  onChanged: (value) async {
-                    setting.enTabBar = value;
-                  },
-                ),
-                SwitchListTile(
-                  title: Text('Auto Refresh'),
-                  value: setting.enAutoRefresh,
-                  onChanged: (value) async {
-                    setting.enAutoRefresh = value;
-                  },
-                ),
-              ],
-            ),
-          ),
-          ListTile(
-            title: Text(
+            subtitle: Text(
               'content settings',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
@@ -53,24 +31,24 @@ class _SettingPageState extends State<SettingPage> {
             child: Column(
               children: <Widget>[
                 SwitchListTile(
-                  title: Text('Full Screen'),
-                  subtitle: Text('also apply in thumbnail and video'),
+                  title: Text('阅览时全屏'),
+                  subtitle: Text('Full Screen'),
                   value: setting.enFullScreen,
                   onChanged: (value) async {
                     setting.enFullScreen = value;
                   },
                 ),
                 SwitchListTile(
-                  title: Text('Volume Control'),
-                  subtitle: Text('not yet'),
+                  title: Text('音量键控制正文切换'),
+                  subtitle: Text('Volume Control'),
                   value: setting.enVolumeControl,
                   onChanged: (value) async {
                     setting.enVolumeControl = value;
                   },
                 ),
                 SwitchListTile(
-                  title: Text('Flipping Animation'),
-                  subtitle: Text('not yet'),
+                  title: Text('翻页动画'),
+                  subtitle: Text('Flipping Animation'),
                   value: setting.enFlippingAnimation,
                   onChanged: (value) async {
                     setting.enFlippingAnimation = value;
@@ -81,6 +59,42 @@ class _SettingPageState extends State<SettingPage> {
           ),
           ListTile(
             title: Text(
+              '主页选项',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+            subtitle: Text(
+              'home settings',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+          Card(
+            child: Column(
+              children: <Widget>[
+                SwitchListTile(
+                  title: Text('允许左右滑动切换页面'),
+                  subtitle: Text('Navigator'),
+                  value: setting.enTabBar,
+                  onChanged: (value) async {
+                    setting.enTabBar = value;
+                  },
+                ),
+                SwitchListTile(
+                  title: Text('启动时自动刷新'),
+                  subtitle: Text('Auto Refresh'),
+                  value: setting.enAutoRefresh,
+                  onChanged: (value) async {
+                    setting.enAutoRefresh = value;
+                  },
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            title: Text(
+              '其他选项',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+            subtitle: Text(
               'other settings',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
@@ -89,8 +103,8 @@ class _SettingPageState extends State<SettingPage> {
             child: Column(
               children: <Widget>[
                 ListTile(
-                  title: Text('download path'),
-                  subtitle: Text('not yet'),
+                  title: Text('下载路径'),
+                  subtitle: Text('download path'),
                 ),
               ],
             ),

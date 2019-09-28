@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('易搜'),
+        title: Text('亦搜'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
